@@ -95,7 +95,6 @@ function Login() {
 
   return (
     <div className="min-h-screen bg-light-bg dark:bg-dark-bg flex">
-
       {/* ── Left panel — your UI ── */}
       <div className="hidden lg:flex w-1/2 relative overflow-hidden bg-black flex-col items-center justify-center p-12">
         {/* Animated blur circles */}
@@ -109,7 +108,10 @@ function Login() {
             <GraduationCap size={40} className="text-white" />
           </div>
           <h1 className="text-white text-5xl font-semibold mb-4">EduLink</h1>
-          <p className="text-white text-lg max-w-sm leading-relaxed" style={{ opacity: 0.8 }}>
+          <p
+            className="text-white text-lg max-w-sm leading-relaxed"
+            style={{ opacity: 0.8 }}
+          >
             Complete School Management System for modern schools and colleges
           </p>
 
@@ -117,17 +119,23 @@ function Login() {
           <div className="flex gap-8 mt-12 justify-center">
             <div className="text-center">
               <div className="text-white text-2xl font-semibold">1,248</div>
-              <div className="text-white text-sm mt-1" style={{ opacity: 0.7 }}>Students</div>
+              <div className="text-white text-sm mt-1" style={{ opacity: 0.7 }}>
+                Students
+              </div>
             </div>
             <div className="w-px bg-white opacity-20" />
             <div className="text-center">
               <div className="text-white text-2xl font-semibold">64</div>
-              <div className="text-white text-sm mt-1" style={{ opacity: 0.7 }}>Teachers</div>
+              <div className="text-white text-sm mt-1" style={{ opacity: 0.7 }}>
+                Teachers
+              </div>
             </div>
             <div className="w-px bg-white opacity-20" />
             <div className="text-center">
               <div className="text-white text-2xl font-semibold">28</div>
-              <div className="text-white text-sm mt-1" style={{ opacity: 0.7 }}>Classes</div>
+              <div className="text-white text-sm mt-1" style={{ opacity: 0.7 }}>
+                Classes
+              </div>
             </div>
           </div>
         </div>
@@ -135,7 +143,6 @@ function Login() {
 
       {/* ── Right panel — form ── */}
       <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-8 relative">
-
         {/* Theme toggle */}
         <button
           onClick={toggleTheme}
@@ -145,7 +152,6 @@ function Login() {
         </button>
 
         <div className="w-full max-w-md">
-
           {/* Header */}
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-6 lg:hidden">
@@ -172,8 +178,10 @@ function Login() {
           )}
 
           {/* Form */}
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+          >
             {/* Email */}
             <div className="flex flex-col gap-1.5">
               <label className="text-light-text-primary dark:text-dark-text-primary text-sm font-medium">
@@ -183,6 +191,7 @@ function Login() {
                 {...register("email")}
                 type="email"
                 placeholder="admin@edulink.com"
+                autoComplete="email"
                 className={`w-full px-4 py-2.5 rounded-lg bg-light-card dark:bg-dark-card border text-light-text-primary dark:text-dark-text-primary placeholder:text-light-text-tertiary dark:placeholder:text-dark-text-tertiary text-sm outline-none transition-colors ${
                   errors.email
                     ? "border-red-400 dark:border-red-600"
@@ -212,6 +221,7 @@ function Login() {
                   {...register("password")}
                   type={showPassword ? "text" : "password"}
                   placeholder="Enter your password"
+                  autoComplete="current-password"
                   className={`w-full px-4 py-2.5 pr-11 rounded-lg bg-light-card dark:bg-dark-card border text-light-text-primary dark:text-dark-text-primary placeholder:text-light-text-tertiary dark:placeholder:text-dark-text-tertiary text-sm outline-none transition-colors ${
                     errors.password
                       ? "border-red-400 dark:border-red-600"
@@ -227,7 +237,9 @@ function Login() {
                 </button>
               </div>
               {errors.password && (
-                <p className="text-red-500 text-xs">{errors.password.message}</p>
+                <p className="text-red-500 text-xs">
+                  {errors.password.message}
+                </p>
               )}
             </div>
 
@@ -255,7 +267,6 @@ function Login() {
             >
               {isLoading ? "Signing in..." : "Sign in"}
             </button>
-
           </form>
 
           {/* Demo accounts */}
@@ -275,7 +286,6 @@ function Login() {
               </p>
             </div>
           </div>
-
         </div>
       </div>
     </div>

@@ -1,6 +1,13 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ROUTES, ROLES } from "../constants/routes";
-import ProtectedRoute from "./ProtectedRoutes";
+import ProtectedRoute from "./ProtectedRoute";
+import AdminLayout from "../components/layout/AdminLayout";
+import TeacherLayout from "../components/layout/TeacherLayout";
+import StudentLayout from "../components/layout/StudentLayout";
+import StudentList from "../pages/students/StudentList";
+import StudentAttendance from "../pages/attendance/StudentAttendence";
+import FeeManagement from "../pages/fees/FeeManagement";
+import AssignmentList from "../pages/assignments/AssignmentList";
 // Auth
 import Login from "../pages/auth/Login";
 
@@ -17,43 +24,50 @@ function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Default redirect */}
         <Route path="/" element={<Navigate to={ROUTES.LOGIN} replace />} />
-
-        {/* Auth routes */}
         <Route path={ROUTES.LOGIN} element={<Login />} />
 
-        {/* Admin routes */}
+        {/* Admin */}
         <Route
-          path={ROUTES.ADMIN_DASHBOARD}
+          path="/admin"
           element={
             <ProtectedRoute allowedRoles={[ROLES.ADMIN]}>
-              <AdminDashboard />
+              <AdminLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="students" element={<StudentList />} />
+          <Route path="attendance" element={<StudentAttendance />} />
+          <Route path="fees" element={<FeeManagement />} />
+          <Route path="assignments" element={<AssignmentList />} />
+        </Route>
 
-        {/* Teacher routes */}
+        {/* Teacher */}
         <Route
-          path={ROUTES.TEACHER_DASHBOARD}
+          path="/teacher"
           element={
             <ProtectedRoute allowedRoles={[ROLES.TEACHER]}>
-              <TeacherDashboard />
+              <TeacherLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route path="dashboard" element={<TeacherDashboard />} />
+        </Route>
 
-        {/* Student routes */}
+        {/* Student */}
         <Route
-          path={ROUTES.STUDENT_DASHBOARD}
+          path="/student"
           element={
             <ProtectedRoute allowedRoles={[ROLES.STUDENT]}>
-              <StudentDashboard />
+              <StudentLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          <Route path="dashboard" element={<StudentDashboard />} />
+        </Route>
 
-        {/* Error routes */}
+        {/* Errors */}
         <Route path={ROUTES.UNAUTHORIZED} element={<Unauthorized />} />
         <Route path={ROUTES.NOT_FOUND} element={<NotFound />} />
         <Route path="*" element={<Navigate to={ROUTES.NOT_FOUND} replace />} />

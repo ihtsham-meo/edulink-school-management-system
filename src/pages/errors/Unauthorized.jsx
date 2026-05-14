@@ -5,7 +5,7 @@ function Unauthorized() {
         403 — Unauthorized
       </h1>
     </div>
-  )
+  );
 }
 
-export default Unauthorized
+export default Unauthorized;

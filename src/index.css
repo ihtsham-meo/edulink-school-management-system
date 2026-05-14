@@ -3,50 +3,50 @@
 
 @theme {
   /* ── Accent ── */
-  --color-accent: #4361EE;
-  --color-accent-soft: #738CFF;
-  --color-accent-hover: #3451D1;
+  --color-accent: #4361ee;
+  --color-accent-soft: #738cff;
+  --color-accent-hover: #3451d1;
 
   /* ── Status ── */
-  --color-success: #10B981;
-  --color-warning: #F59E0B;
-  --color-danger: #EF4444;
-  --color-purple: #8B5CF6;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-purple: #8b5cf6;
 
   /* ── Light mode backgrounds ── */
-  --color-light-bg: #F8FAFC;
-  --color-light-card: #FFFFFF;
-  --color-light-border: #E2E8F0;
-  --color-light-hover: #F1F5F9;
+  --color-light-bg: #f8fafc;
+  --color-light-card: #ffffff;
+  --color-light-border: #e2e8f0;
+  --color-light-hover: #f1f5f9;
 
   /* ── Light mode text ── */
-  --color-light-text-primary: #1E293B;
-  --color-light-text-secondary: #64748B;
-  --color-light-text-tertiary: #94A3B8;
+  --color-light-text-primary: #1e293b;
+  --color-light-text-secondary: #64748b;
+  --color-light-text-tertiary: #94a3b8;
 
   /* ── Dark mode backgrounds ── */
-  --color-dark-bg: #0F1117;
+  --color-dark-bg: #0f1117;
   --color-dark-card: #141720;
-  --color-dark-border: #1E2433;
-  --color-dark-hover: #1C2030;
+  --color-dark-border: #1e2433;
+  --color-dark-hover: #1c2030;
 
   /* ── Dark mode text ── */
-  --color-dark-text-primary: #E2E8F0;
-  --color-dark-text-secondary: #6B7280;
+  --color-dark-text-primary: #e2e8f0;
+  --color-dark-text-secondary: #6b7280;
   --color-dark-text-tertiary: #374151;
 
   /* ── Stat card gradients ── */
-  --color-stat-blue-from: #4361EE;
-  --color-stat-blue-to: #738CFF;
-  --color-stat-green-from: #10B981;
-  --color-stat-green-to: #34D399;
-  --color-stat-orange-from: #F59E0B;
-  --color-stat-orange-to: #FBBF24;
-  --color-stat-red-from: #EF4444;
-  --color-stat-red-to: #F87171;
+  --color-stat-blue-from: #4361ee;
+  --color-stat-blue-to: #738cff;
+  --color-stat-green-from: #10b981;
+  --color-stat-green-to: #34d399;
+  --color-stat-orange-from: #f59e0b;
+  --color-stat-orange-to: #fbbf24;
+  --color-stat-red-from: #ef4444;
+  --color-stat-red-to: #f87171;
 
   /* ── Font ── */
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
 
   /* ── Border radius ── */
   --radius-sm: 6px;
@@ -71,9 +71,22 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: #cbd5e1;
   border-radius: 99px;
 }
 .dark ::-webkit-scrollbar-thumb {
-  background: #1E2433;
+  background: #1e2433;
+}
+
+@layer utilities {
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }

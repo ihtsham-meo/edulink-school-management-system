@@ -1,32 +1,33 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1'
+const BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api/v1";
 
 export const API = {
   BASE_URL,
 
   // Auth
-  LOGIN:           '/auth/login',
-  LOGOUT:          '/auth/logout',
-  REFRESH:         '/auth/refresh',
-  FORGOT_PASSWORD: '/auth/forgot-password',
-  RESET_PASSWORD:  '/auth/reset-password',
+  LOGIN: "/auth/login",
+  LOGOUT: "/auth/logout",
+  REFRESH: "/auth/refresh",
+  FORGOT_PASSWORD: "/auth/forgot-password",
+  RESET_PASSWORD: "/auth/reset-password",
 
   // Students
-  STUDENTS:        '/students',
+  STUDENTS: "/students",
 
   // Staff
-  STAFF:           '/staff',
+  STAFF: "/staff",
 
   // Attendance
-  ATTENDANCE:      '/attendance/students',
+  ATTENDANCE: "/attendance/students",
 
   // Assignments
-  ASSIGNMENTS:     '/assignments',
+  ASSIGNMENTS: "/assignments",
 
   // Fees
-  INVOICES:        '/invoices',
-  PAYMENTS:        '/payments',
+  INVOICES: "/invoices",
+  PAYMENTS: "/payments",
 
   // Exams
-  EXAMS:           '/exams',
-  TESTS:           '/tests',
-}
+  EXAMS: "/exams",
+  TESTS: "/tests",
+};
