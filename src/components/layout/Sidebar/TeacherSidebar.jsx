@@ -20,7 +20,7 @@ import { ROUTES } from "../../../constants/routes";
 import { useAuth } from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
-function TeacherSidebar({ isOpen, onClose }) {
+function TeacherSidebar({ isOpen, onClose, collapsed }) {
   const { signOut, user } = useAuth();
   const navigate = useNavigate();
 
@@ -45,66 +45,83 @@ function TeacherSidebar({ isOpen, onClose }) {
         w-[220px] min-w-[220px]
         bg-light-card dark:bg-dark-card
         border-r border-light-border dark:border-dark-border
-        transition-transform duration-300
-        ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0 lg:w-0 lg:min-w-0 lg:border-0 lg:overflow-hidden"}
+        transition-transform duration-300 overflow-hidden
+        ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+        ${collapsed ? "lg:w-[60px] lg:min-w-[60px]" : "w-[220px] min-w-[220px]"}
       `}
       >
         {/* Logo */}
-        <div className="flex items-center justify-between px-4 py-4 border-b border-light-border dark:border-dark-border">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center flex-shrink-0">
+        <div
+          className={`flex items-center px-4 py-4 border-b border-light-border dark:border-dark-border ${collapsed ? "justify-center px-0" : "justify-between"}`}
+        >
+          {!collapsed && (
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center flex-shrink-0">
+                <GraduationCap size={18} color="white" />
+              </div>
+              <div>
+                <p className="text-light-text-primary dark:text-dark-text-primary text-sm font-semibold">
+                  EduLink
+                </p>
+                <p className="text-light-text-tertiary dark:text-dark-text-tertiary text-xs">
+                  Teacher portal
+                </p>
+              </div>
+            </div>
+          )}
+          {collapsed && (
+            <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
               <GraduationCap size={18} color="white" />
             </div>
-            <div>
-              <p className="text-light-text-primary dark:text-dark-text-primary text-sm font-semibold">
-                EduLink
-              </p>
-              <p className="text-light-text-tertiary dark:text-dark-text-tertiary text-xs">
-                Teacher portal
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            className="lg:hidden text-light-text-tertiary dark:text-dark-text-tertiary"
-          >
-            <X size={18} />
-          </button>
+          )}
+          {!collapsed && (
+            <button
+              onClick={onClose}
+              className="lg:hidden text-light-text-tertiary dark:text-dark-text-tertiary"
+            >
+              <X size={18} />
+            </button>
+          )}
         </div>
 
         {/* Nav */}
         <nav className="flex-1 overflow-y-auto py-2">
-          <SidebarSection label="Overview" />
+          {!collapsed && <SidebarSection label="Overview" />}
           <SidebarItem
             to={ROUTES.TEACHER_DASHBOARD}
             icon={LayoutDashboard}
             label="Dashboard"
+            collapsed={collapsed}
           />
 
-          <SidebarSection label="My Classes" />
+          {!collapsed && <SidebarSection label="My Classes" />}
           <SidebarItem
             to={ROUTES.TEACHER_STUDENTS}
             icon={Users}
             label="My Students"
+            collapsed={collapsed}
           />
           <SidebarItem
             to="/teacher/timetable"
             icon={Clock}
             label="My Timetable"
+            collapsed={collapsed}
           />
           <SidebarItem
             to={ROUTES.TEACHER_ATTENDANCE}
             icon={CalendarCheck}
             label="Attendance"
+            collapsed={collapsed}
           />
 
-          <SidebarSection label="Assignments" />
+          {!collapsed && <SidebarSection label="Assignments" />}
           <SidebarItem
             to={ROUTES.TEACHER_ASSIGNMENTS}
             icon={FileText}
             label="My Assignments"
             badge="4"
             badgeColor="blue"
+            collapsed={collapsed}
           />
           <SidebarItem
             to="/teacher/submissions"
@@ -112,51 +129,60 @@ function TeacherSidebar({ isOpen, onClose }) {
             label="Submissions"
             badge="18"
             badgeColor="red"
+            collapsed={collapsed}
           />
 
-          <SidebarSection label="Academic" />
+          {!collapsed && <SidebarSection label="Academic" />}
           <SidebarItem
             to={ROUTES.TEACHER_GRADES}
             icon={PenLine}
             label="Grade Entry"
+            collapsed={collapsed}
           />
           <SidebarItem
             to="/teacher/tests"
             icon={BarChart3}
             label="Test Management"
+            collapsed={collapsed}
           />
           <SidebarItem
             to="/teacher/exams"
             icon={BookOpen}
             label="Exam Schedule"
+            collapsed={collapsed}
           />
-          <SidebarItem to="/teacher/results" icon={BarChart3} label="Results" />
+          <SidebarItem to="/teacher/results" icon={BarChart3} label="Results" collapsed={collapsed} />
 
-          <SidebarSection label="More" />
+          {!collapsed && <SidebarSection label="More" />}
           <SidebarItem
             to="/teacher/study-materials"
             icon={BookMarked}
             label="Study Materials"
+            collapsed={collapsed}
           />
           <SidebarItem
             to="/teacher/diary"
             icon={BookCopy}
             label="Homework Diary"
+            collapsed={collapsed}
           />
           <SidebarItem
             to="/teacher/noticeboard"
             icon={Megaphone}
             label="Noticeboard"
+            collapsed={collapsed}
           />
           <SidebarItem
             to="/teacher/leave"
             icon={CalendarDays}
             label="Leave Request"
+            collapsed={collapsed}
           />
         </nav>
 
         {/* User + Logout */}
         <div className="border-t border-light-border dark:border-dark-border p-3">
+          {!collapsed && (
           <div className="flex items-center gap-2.5 px-2 py-1.5 mb-1">
             <div className="w-7 h-7 rounded-full bg-emerald-500 flex items-center justify-center text-white text-xs font-medium flex-shrink-0">
               {user?.name?.charAt(0) || "T"}
@@ -169,13 +195,14 @@ function TeacherSidebar({ isOpen, onClose }) {
                 {user?.email || ""}
               </p>
             </div>
-          </div>
+          </div> )}
           <button
             onClick={handleLogout}
+            title={collapsed ? "Logout" : undefined}
             className="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-950 transition-colors"
           >
             <LogOut size={17} />
-            Logout
+            {!collapsed && "Logout"}
           </button>
         </div>
       </aside>

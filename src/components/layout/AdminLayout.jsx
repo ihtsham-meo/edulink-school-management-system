@@ -5,21 +5,25 @@ import Topbar from "./Topbar/Topbar";
 
 function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
+
+  const handleMenuClick = () => {
+    if (window.innerWidth < 1024) {
+      setSidebarOpen((prev) => !prev); // mobile → slide in/out
+    } else {
+      setCollapsed((prev) => !prev); // desktop → collapse to icons
+    }
+  };
 
   return (
     <div className="flex h-screen bg-light-bg dark:bg-dark-bg overflow-hidden">
-      {/* Sidebar */}
       <AdminSidebar
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
+        collapsed={collapsed}
       />
-
-      {/* Main area */}
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-        {/* Topbar */}
-        <Topbar onMenuClick={() => setSidebarOpen((prev) => !prev)} />
-
-        {/* Page content */}
+        <Topbar onMenuClick={handleMenuClick} />
         <main className="flex-1 overflow-y-auto p-6">
           <Outlet />
         </main>

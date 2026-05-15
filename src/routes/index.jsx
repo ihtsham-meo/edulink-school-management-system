@@ -8,6 +8,8 @@ import StudentList from "../pages/students/StudentList";
 import StudentAttendance from "../pages/attendance/StudentAttendence";
 import FeeManagement from "../pages/fees/FeeManagement";
 import AssignmentList from "../pages/assignments/AssignmentList";
+import ExamList from "../pages/exams/ExamList";
+
 // Auth
 import Login from "../pages/auth/Login";
 
@@ -41,6 +43,7 @@ function AppRouter() {
           <Route path="attendance" element={<StudentAttendance />} />
           <Route path="fees" element={<FeeManagement />} />
           <Route path="assignments" element={<AssignmentList />} />
+          <Route path="exams" element={<ExamList />} />
         </Route>
 
         {/* Teacher */}

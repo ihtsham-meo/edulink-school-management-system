@@ -1992,6 +1992,16 @@ export const mockSubmissions = [
   },
 ];
 
+// ── EXAM RESULTS ──
+export const mockExamResults = [
+  { id: 1, studentId: 1, studentName: 'Ali Hassan',   subject: 'Mathematics', examId: 1, marks: 88, totalMarks: 100, grade: 'A',  status: 'pass' },
+  { id: 2, studentId: 2, studentName: 'Sara Khan',    subject: 'Mathematics', examId: 1, marks: 72, totalMarks: 100, grade: 'B',  status: 'pass' },
+  { id: 3, studentId: 3, studentName: 'Usman Raza',   subject: 'Mathematics', examId: 1, marks: 45, totalMarks: 100, grade: 'D',  status: 'fail' },
+  { id: 4, studentId: 4, studentName: 'Ayesha Mir',   subject: 'English',     examId: 2, marks: 91, totalMarks: 100, grade: 'A+', status: 'pass' },
+  { id: 5, studentId: 5, studentName: 'Bilal Ahmed',  subject: 'English',     examId: 2, marks: 60, totalMarks: 100, grade: 'C',  status: 'pass' },
+  { id: 6, studentId: 6, studentName: 'Hina Malik',   subject: 'Physics',     examId: 3, marks: 78, totalMarks: 100, grade: 'B+', status: 'pass' },
+]
+
 // ── STATUS STYLES (reusable across pages) ──
 export const feeStatusStyles = {
   paid: "bg-green-100 dark:bg-green-950 text-green-700 dark:text-green-400",

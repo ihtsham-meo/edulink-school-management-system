@@ -1,4 +1,4 @@
-import { GraduationCap, X } from "lucide-react";
+import { GraduationCap, X, LogOut } from "lucide-react";
 import {
   LayoutDashboard,
   Users,
@@ -14,20 +14,62 @@ import {
   BookMarked,
   Megaphone,
   Settings,
-  LogOut,
   HeartPulse,
   UserSquare2,
   Trophy,
   Library,
   Eye,
 } from "lucide-react";
-import SidebarItem from "./SidebarItem";
+import { NavLink, useNavigate } from "react-router-dom";
 import SidebarSection from "./SidebarSection";
 import { ROUTES } from "../../../constants/routes";
 import { useAuth } from "../../../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
 
-function AdminSidebar({ isOpen, onClose }) {
+function NavItem({
+  to,
+  icon: Icon,
+  label,
+  badge,
+  badgeColor = "blue",
+  collapsed,
+}) {
+  const badgeStyles = {
+    blue: "bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400",
+    red: "bg-red-50 dark:bg-red-950 text-red-600 dark:text-red-400",
+  };
+
+  return (
+    <NavLink
+      to={to}
+      title={collapsed ? label : undefined}
+      className={({ isActive }) =>
+        `flex items-center gap-3 px-3 py-2 mx-2 rounded-lg text-sm transition-all duration-200 ${
+          collapsed ? "justify-center" : ""
+        } ${
+          isActive
+            ? "bg-accent text-white font-medium"
+            : "text-light-text-secondary dark:text-dark-text-secondary hover:bg-light-hover dark:hover:bg-dark-hover"
+        }`
+      }
+    >
+      {Icon && <Icon size={17} className="flex-shrink-0" />}
+      {!collapsed && (
+        <>
+          <span className="flex-1 truncate">{label}</span>
+          {badge && (
+            <span
+              className={`text-xs px-1.5 py-0.5 rounded-md font-medium ${badgeStyles[badgeColor]}`}
+            >
+              {badge}
+            </span>
+          )}
+        </>
+      )}
+    </NavLink>
+  );
+}
+
+function AdminSidebar({ isOpen, onClose, collapsed }) {
   const { signOut, user } = useAuth();
   const navigate = useNavigate();
 
@@ -46,164 +88,222 @@ function AdminSidebar({ isOpen, onClose }) {
         />
       )}
 
-      {/* Sidebar */}
       <aside
         className={`
         fixed lg:static inset-y-0 left-0 z-30
         flex flex-col
-        w-[220px] min-w-[220px]
         bg-light-card dark:bg-dark-card
         border-r border-light-border dark:border-dark-border
-        transition-transform duration-300
-        ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0 lg:w-0 lg:min-w-0 lg:border-0 lg:overflow-hidden"}
+        transition-all duration-300 overflow-hidden
+        ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+        ${collapsed ? "lg:w-[60px] lg:min-w-[60px]" : "w-[220px] min-w-[220px]"}
       `}
       >
         {/* Logo */}
-        <div className="flex items-center justify-between px-4 py-4 border-b border-light-border dark:border-dark-border">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 bg-gray-500 rounded-lg flex items-center justify-center flex-shrink-0">
+        <div
+          className={`flex items-center px-4 py-4 border-b border-light-border dark:border-dark-border ${collapsed ? "justify-center px-0" : "justify-between"}`}
+        >
+          {!collapsed && (
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center flex-shrink-0">
+                <GraduationCap size={18} color="white" />
+              </div>
+              <div>
+                <p className="text-light-text-primary dark:text-dark-text-primary text-sm font-semibold">
+                  EduLink
+                </p>
+                <p className="text-light-text-tertiary dark:text-dark-text-tertiary text-xs">
+                  Admin panel
+                </p>
+              </div>
+            </div>
+          )}
+          {collapsed && (
+            <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
               <GraduationCap size={18} color="white" />
             </div>
-            <div>
-              <p className="text-light-text-primary dark:text-dark-text-primary text-sm font-semibold">
-                EduLink
-              </p>
-              <p className="text-light-text-tertiary dark:text-dark-text-tertiary text-xs">
-                Admin panel
-              </p>
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            className="lg:hidden text-light-text-tertiary dark:text-dark-text-tertiary"
-          >
-            <X size={18} />
-          </button>
+          )}
+          {!collapsed && (
+            <button
+              onClick={onClose}
+              className="lg:hidden text-light-text-tertiary dark:text-dark-text-tertiary"
+            >
+              <X size={18} />
+            </button>
+          )}
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 overflow-y-auto no-scrollbar overflow-auto py-2">
-          <SidebarSection label="Overview" />
-          <SidebarItem
+        <nav className="flex-1 overflow-y-auto py-2">
+          {!collapsed && <SidebarSection label="Overview" />}
+          <NavItem
             to={ROUTES.ADMIN_DASHBOARD}
             icon={LayoutDashboard}
             label="Dashboard"
+            collapsed={collapsed}
           />
 
-          <SidebarSection label="People" />
-          <SidebarItem
+          {!collapsed && <SidebarSection label="People" />}
+          <NavItem
             to={ROUTES.ADMIN_STUDENTS}
             icon={Users}
             label="Students"
-            badge=""
+            badge="1,248"
             badgeColor="blue"
+            collapsed={collapsed}
           />
-          <SidebarItem
+          <NavItem
             to={ROUTES.ADMIN_TEACHERS}
             icon={UserCheck}
             label="Teachers"
+            collapsed={collapsed}
           />
-          <SidebarItem
+          <NavItem
             to={ROUTES.ADMIN_CLASSES}
             icon={Building2}
             label="Classes & Sections"
+            collapsed={collapsed}
           />
 
-          <SidebarSection label="Academic" />
-          <SidebarItem
+          {!collapsed && <SidebarSection label="Academic" />}
+          <NavItem
             to={ROUTES.ADMIN_ATTENDANCE}
             icon={CalendarCheck}
             label="Attendance"
+            collapsed={collapsed}
           />
-          <SidebarItem to="/admin/timetable" icon={Clock} label="Timetable" />
-          <SidebarItem
+          <NavItem
+            to="/admin/timetable"
+            icon={Clock}
+            label="Timetable"
+            collapsed={collapsed}
+          />
+          <NavItem
             to={ROUTES.ADMIN_ASSIGNMENTS}
             icon={FileText}
             label="Assignments"
+            collapsed={collapsed}
           />
-          <SidebarItem to={ROUTES.ADMIN_TESTS} icon={PenLine} label="Tests" />
-          <SidebarItem to={ROUTES.ADMIN_EXAMS} icon={BookOpen} label="Exams" />
-          <SidebarItem
+          <NavItem
+            to={ROUTES.ADMIN_TESTS}
+            icon={PenLine}
+            label="Tests"
+            collapsed={collapsed}
+          />
+          <NavItem
+            to={ROUTES.ADMIN_EXAMS}
+            icon={BookOpen}
+            label="Exams"
+            collapsed={collapsed}
+          />
+          <NavItem
             to="/admin/grades"
             icon={BarChart3}
             label="Grades & Results"
+            collapsed={collapsed}
           />
 
-          <SidebarSection label="Finance" />
-          <SidebarItem
+          {!collapsed && <SidebarSection label="Finance" />}
+          <NavItem
             to={ROUTES.ADMIN_FEES}
             icon={Banknote}
             label="Fee Management"
             badge="12"
             badgeColor="red"
+            collapsed={collapsed}
           />
-          <SidebarItem to="/admin/expenses" icon={BarChart3} label="Expenses" />
-          <SidebarItem
+          <NavItem
+            to="/admin/expenses"
+            icon={BarChart3}
+            label="Expenses"
+            collapsed={collapsed}
+          />
+          <NavItem
             to={ROUTES.ADMIN_SALARY}
             icon={Banknote}
             label="Salary & Loans"
+            collapsed={collapsed}
           />
 
-          <SidebarSection label="Activities" />
-          <SidebarItem to="/admin/library" icon={Library} label="Library" />
-          <SidebarItem
+          {!collapsed && <SidebarSection label="Activities" />}
+          <NavItem
+            to="/admin/library"
+            icon={Library}
+            label="Library"
+            collapsed={collapsed}
+          />
+          <NavItem
             to="/admin/sports"
             icon={Trophy}
             label="Sports & Activities"
+            collapsed={collapsed}
           />
-          <SidebarItem
+          <NavItem
             to="/admin/health"
             icon={HeartPulse}
             label="Health Records"
+            collapsed={collapsed}
           />
-          <SidebarItem to="/admin/alumni" icon={UserSquare2} label="Alumni" />
+          <NavItem
+            to="/admin/alumni"
+            icon={UserSquare2}
+            label="Alumni"
+            collapsed={collapsed}
+          />
 
-          <SidebarSection label="Administration" />
-          <SidebarItem
+          {!collapsed && <SidebarSection label="Administration" />}
+          <NavItem
             to="/admin/visitor"
             icon={Eye}
             label="Visitor Management"
+            collapsed={collapsed}
           />
-          <SidebarItem
+          <NavItem
             to="/admin/noticeboard"
             icon={Megaphone}
             label="Noticeboard"
+            collapsed={collapsed}
           />
-          <SidebarItem
+          <NavItem
             to="/admin/communications"
             icon={Megaphone}
             label="Communications"
+            collapsed={collapsed}
           />
 
-          <SidebarSection label="System" />
-          <SidebarItem
+          {!collapsed && <SidebarSection label="System" />}
+          <NavItem
             to={ROUTES.ADMIN_SETTINGS}
             icon={Settings}
             label="Settings"
+            collapsed={collapsed}
           />
         </nav>
 
         {/* User + Logout */}
         <div className="border-t border-light-border dark:border-dark-border p-3">
-          <div className="flex items-center gap-2.5 px-2 py-1.5 mb-1">
-            <div className="w-7 h-7 rounded-full bg-accent flex items-center justify-center text-white text-xs font-medium flex-shrink-0">
-              {user?.name?.charAt(0) || "A"}
+          {!collapsed && (
+            <div className="flex items-center gap-2.5 px-2 py-1.5 mb-1">
+              <div className="w-7 h-7 rounded-full bg-accent flex items-center justify-center text-white text-xs font-medium flex-shrink-0">
+                {user?.name?.charAt(0) || "A"}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-light-text-primary dark:text-dark-text-primary text-xs font-medium truncate">
+                  {user?.name || "Admin"}
+                </p>
+                <p className="text-light-text-tertiary dark:text-dark-text-tertiary text-xs truncate">
+                  {user?.email || ""}
+                </p>
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-light-text-primary dark:text-dark-text-primary text-xs font-medium truncate">
-                {user?.name || "Admin"}
-              </p>
-              <p className="text-light-text-tertiary dark:text-dark-text-tertiary text-xs truncate">
-                {user?.email || ""}
-              </p>
-            </div>
-          </div>
+          )}
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-950 transition-colors"
+            title={collapsed ? "Logout" : undefined}
+            className={`flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-950 transition-colors ${collapsed ? "justify-center" : ""}`}
           >
             <LogOut size={17} />
-            Logout
+            {!collapsed && "Logout"}
           </button>
         </div>
       </aside>
