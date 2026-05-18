@@ -9,6 +9,7 @@ import {
   ClipboardList,
   Clock,
   FileText,
+  HelpCircle,
   PenLine,
   BarChart3,
   Banknote,
@@ -21,6 +22,8 @@ import {
   Trophy,
   Library,
   Eye,
+  Bus,
+  Package,
 } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import SidebarSection from "./SidebarSection";
@@ -192,9 +195,27 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
             collapsed={collapsed}
           />
           <NavItem
+            to={ROUTES.ADMIN_STUDY_MATERIALS}
+            icon={BookMarked}
+            label="Study Materials"
+            collapsed={collapsed}
+          />
+          <NavItem
+            to={ROUTES.ADMIN_DIARY}
+            icon={ClipboardList}
+            label="Homework Diary"
+            collapsed={collapsed}
+          />
+          <NavItem
             to={ROUTES.ADMIN_TESTS}
             icon={PenLine}
             label="Tests"
+            collapsed={collapsed}
+          />
+          <NavItem
+            to={ROUTES.ADMIN_QUIZ}
+            icon={HelpCircle}
+            label="Quiz"
             collapsed={collapsed}
           />
           <NavItem
@@ -204,7 +225,7 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
             collapsed={collapsed}
           />
           <NavItem
-            to="/admin/grades"
+            to={ROUTES.ADMIN_GRADES}
             icon={BarChart3}
             label="Grades & Results"
             collapsed={collapsed}
@@ -220,7 +241,7 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
             collapsed={collapsed}
           />
           <NavItem
-            to="/admin/expenses"
+            to={ROUTES.ADMIN_EXPENSES}
             icon={BarChart3}
             label="Expenses"
             collapsed={collapsed}
@@ -249,6 +270,24 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
             to="/admin/health"
             icon={HeartPulse}
             label="Health Records"
+            collapsed={collapsed}
+          />
+          <NavItem
+            to="/admin/gamification"
+            icon={Trophy}
+            label="Gamification"
+            collapsed={collapsed}
+          />
+          <NavItem
+            to={ROUTES.ADMIN_TRANSPORT}
+            icon={Bus}
+            label="Transport"
+            collapsed={collapsed}
+          />
+          <NavItem
+            to={ROUTES.ADMIN_INVENTORY}
+            icon={Package}
+            label="Inventory"
             collapsed={collapsed}
           />
           <NavItem

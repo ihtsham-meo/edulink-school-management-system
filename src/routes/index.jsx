@@ -29,6 +29,8 @@ import GradesResults from '../pages/grades/GradesResults'
 import Communications from '../pages/communications/Communications'
 import TransportRoutes  from '../pages/transport/TransportRoutes'
 import Inventory from '../pages/inventory/Inventory'
+import ExpenseManagement from '../pages/expenses/ExpenseManagement'
+import Gamification from '../pages/gamification/Gamification'
 
 
 // Auth
@@ -63,6 +65,7 @@ function AppRouter() {
           <Route path="students" element={<StudentList />} />
           <Route path="attendance" element={<StudentAttendance />} />
           <Route path="fees" element={<FeeManagement />} />
+          <Route path="expenses" element={<ExpenseManagement />} />
           <Route path="assignments" element={<AssignmentList />} />
           <Route path="exams" element={<ExamList />} />
           <Route path="staff" element={<StaffList />} />
@@ -85,6 +88,7 @@ function AppRouter() {
           <Route path="communications" element={<Communications />} />
           <Route path="transport" element={<TransportRoutes />} />
           <Route path="inventory" element={<Inventory />} />
+          <Route path="gamification" element={<Gamification />} />
         </Route>
 
         {/* Teacher */}

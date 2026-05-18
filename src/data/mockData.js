@@ -2291,6 +2291,26 @@ export const feeStatusStyles = {
   overdue: "bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-400",
 };
 
+// ── GAMIFICATION ──
+export const mockStudentPoints = [
+  { id: 1, studentName: 'Ali Hassan',   class: '10-A', points: 950, badges: ['Perfect Attendance', 'Top Scorer', 'Assignment Star'], rank: 1, level: 'Gold'   },
+  { id: 2, studentName: 'Ayesha Mir',   class: '8-C',  points: 920, badges: ['Quiz Champion', 'Behavior Star'],                      rank: 2, level: 'Gold'   },
+  { id: 3, studentName: 'Hina Malik',   class: '10-A', points: 880, badges: ['Assignment Star', 'Perfect Attendance'],               rank: 3, level: 'Silver' },
+  { id: 4, studentName: 'Sara Khan',    class: '9-B',  points: 820, badges: ['Quiz Champion'],                                       rank: 4, level: 'Silver' },
+  { id: 5, studentName: 'Nadia Yousaf', class: '11-A', points: 780, badges: ['Top Scorer'],                                          rank: 5, level: 'Silver' },
+  { id: 6, studentName: 'Bilal Ahmed',  class: '7-A',  points: 650, badges: ['Assignment Star'],                                     rank: 6, level: 'Bronze' },
+  { id: 7, studentName: 'Usman Raza',   class: '11-A', points: 580, badges: [],                                                      rank: 7, level: 'Bronze' },
+  { id: 8, studentName: 'Hamza Tariq',  class: '8-C',  points: 520, badges: ['Behavior Star'],                                       rank: 8, level: 'Bronze' },
+]
+
+export const mockBadges = [
+  { id: 1, name: 'Perfect Attendance', description: 'Attend school every day for a month',   icon: '🏆', color: 'bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-400',  earned: 3  },
+  { id: 2, name: 'Top Scorer',         description: 'Score above 90% in any exam',            icon: '⭐', color: 'bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-400',  earned: 2  },
+  { id: 3, name: 'Assignment Star',    description: 'Submit all assignments on time',          icon: '📝', color: 'bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-400',     earned: 4  },
+  { id: 4, name: 'Quiz Champion',      description: 'Score 100% in any quiz',                 icon: '🎯', color: 'bg-purple-50 dark:bg-purple-950 text-purple-700 dark:text-purple-400', earned: 2 },
+  { id: 5, name: 'Behavior Star',      description: 'Receive 5 positive behavior tags',       icon: '😊', color: 'bg-pink-50 dark:bg-pink-950 text-pink-700 dark:text-pink-400',     earned: 2  },
+]
+
 export const attendanceStatusStyles = {
   present: "bg-green-100 dark:bg-green-950 text-green-700 dark:text-green-400",
   absent: "bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-400",
