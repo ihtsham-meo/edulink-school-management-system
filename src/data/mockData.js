@@ -2002,6 +2002,288 @@ export const mockExamResults = [
   { id: 6, studentId: 6, studentName: 'Hina Malik',   subject: 'Physics',     examId: 3, marks: 78, totalMarks: 100, grade: 'B+', status: 'pass' },
 ]
 
+// ── NOTICES ──
+export const mockNotices = [
+  { id: 1, title: 'Mid-term Exams Scheduled',        content: 'Mid-term exams will be held from 15 May to 20 May 2026. All students must bring their admit cards.',          target: 'all',     postedBy: 'Admin', date: '2026-05-14', image: false, pinned: true  },
+  { id: 2, title: 'Fee Submission Deadline',          content: 'Last date for fee submission is 10 May 2026. Students with unpaid fees will not be allowed in exams.',        target: 'all',     postedBy: 'Admin', date: '2026-05-13', image: false, pinned: true  },
+  { id: 3, title: 'New Timetable for Grade 10',       content: 'A revised timetable for Grade 10 has been published. Please check the timetable section for details.',        target: 'all',     postedBy: 'Admin', date: '2026-05-12', image: false, pinned: false },
+  { id: 4, title: 'Staff Meeting on Friday',          content: 'All staff members are required to attend a meeting on Friday 16 May at 2:00 PM in the conference room.',      target: 'staff',   postedBy: 'Admin', date: '2026-05-12', image: false, pinned: false },
+  { id: 5, title: 'Annual Sports Day Announcement',   content: 'Annual sports day will be held on 25 May 2026. Students interested in participating should register by 18 May.', target: 'all',  postedBy: 'Admin', date: '2026-05-11', image: false, pinned: false },
+  { id: 6, title: 'Library Books Return Reminder',    content: 'All students who have borrowed library books must return them before 20 May 2026 to avoid late fines.',        target: 'student', postedBy: 'Admin', date: '2026-05-10', image: false, pinned: false },
+]
+
+// ── WEEKLY TIMETABLE ──
+export const mockWeeklyTimetable = {
+  Monday: [
+    { period: 'P1', time: '8:00 - 8:45',   subject: 'Mathematics', teacher: 'Ms. Fatima',  class: '10-A', room: 'Room 12' },
+    { period: 'P2', time: '8:45 - 9:30',   subject: 'English',     teacher: 'Mr. Kamran',  class: '10-A', room: 'Room 8'  },
+    { period: 'P3', time: '9:30 - 10:15',  subject: 'Physics',     teacher: 'Ms. Sana',    class: '10-A', room: 'Room 5'  },
+    { period: 'P4', time: '11:00 - 11:45', subject: 'Chemistry',   teacher: 'Mr. Bilal',   class: '10-A', room: 'Room 3'  },
+    { period: 'P5', time: '11:45 - 12:30', subject: 'Computer',    teacher: 'Ms. Rabia',   class: '10-A', room: 'Lab 1'   },
+  ],
+  Tuesday: [
+    { period: 'P1', time: '8:00 - 8:45',   subject: 'English',     teacher: 'Mr. Kamran',  class: '10-A', room: 'Room 8'  },
+    { period: 'P2', time: '8:45 - 9:30',   subject: 'Mathematics', teacher: 'Ms. Fatima',  class: '10-A', room: 'Room 12' },
+    { period: 'P3', time: '9:30 - 10:15',  subject: 'Computer',    teacher: 'Ms. Rabia',   class: '10-A', room: 'Lab 1'   },
+    { period: 'P4', time: '11:00 - 11:45', subject: 'Physics',     teacher: 'Ms. Sana',    class: '10-A', room: 'Room 5'  },
+    { period: 'P5', time: '11:45 - 12:30', subject: 'Chemistry',   teacher: 'Mr. Bilal',   class: '10-A', room: 'Room 3'  },
+  ],
+  Wednesday: [
+    { period: 'P1', time: '8:00 - 8:45',   subject: 'Chemistry',   teacher: 'Mr. Bilal',   class: '10-A', room: 'Room 3'  },
+    { period: 'P2', time: '8:45 - 9:30',   subject: 'Physics',     teacher: 'Ms. Sana',    class: '10-A', room: 'Room 5'  },
+    { period: 'P3', time: '9:30 - 10:15',  subject: 'Mathematics', teacher: 'Ms. Fatima',  class: '10-A', room: 'Room 12' },
+    { period: 'P4', time: '11:00 - 11:45', subject: 'English',     teacher: 'Mr. Kamran',  class: '10-A', room: 'Room 8'  },
+    { period: 'P5', time: '11:45 - 12:30', subject: 'Computer',    teacher: 'Ms. Rabia',   class: '10-A', room: 'Lab 1'   },
+  ],
+  Thursday: [
+    { period: 'P1', time: '8:00 - 8:45',   subject: 'Computer',    teacher: 'Ms. Rabia',   class: '10-A', room: 'Lab 1'   },
+    { period: 'P2', time: '8:45 - 9:30',   subject: 'Chemistry',   teacher: 'Mr. Bilal',   class: '10-A', room: 'Room 3'  },
+    { period: 'P3', time: '9:30 - 10:15',  subject: 'English',     teacher: 'Mr. Kamran',  class: '10-A', room: 'Room 8'  },
+    { period: 'P4', time: '11:00 - 11:45', subject: 'Mathematics', teacher: 'Ms. Fatima',  class: '10-A', room: 'Room 12' },
+    { period: 'P5', time: '11:45 - 12:30', subject: 'Physics',     teacher: 'Ms. Sana',    class: '10-A', room: 'Room 5'  },
+  ],
+  Friday: [
+    { period: 'P1', time: '8:00 - 8:45',   subject: 'Physics',     teacher: 'Ms. Sana',    class: '10-A', room: 'Room 5'  },
+    { period: 'P2', time: '8:45 - 9:30',   subject: 'Computer',    teacher: 'Ms. Rabia',   class: '10-A', room: 'Lab 1'   },
+    { period: 'P3', time: '9:30 - 10:15',  subject: 'Chemistry',   teacher: 'Mr. Bilal',   class: '10-A', room: 'Room 3'  },
+    { period: 'P4', time: '11:00 - 11:45', subject: 'Computer',    teacher: 'Ms. Rabia',   class: '10-A', room: 'Lab 1'   },
+    { period: 'P5', time: '11:45 - 12:30', subject: 'Mathematics', teacher: 'Ms. Fatima',  class: '10-A', room: 'Room 12' },
+  ],
+
+    Saturday: [
+    { period: 'P1', time: '8:00 - 8:45',   subject: 'Physics',     teacher: 'Ms. Sana',    class: '10-A', room: 'Room 5'  },
+    { period: 'P2', time: '8:45 - 9:30',   subject: 'Computer',    teacher: 'Ms. Rabia',   class: '10-A', room: 'Lab 1'   },
+    { period: 'P3', time: '9:30 - 10:15',  subject: 'Free',   teacher: 'Mr. Bilal',   class: '10-A', room: 'Room 3'  },
+    { period: 'P4', time: '11:00 - 11:45', subject: 'Computer',    teacher: 'Ms. Rabia',   class: '10-A', room: 'Lab 1'   },
+    { period: 'P5', time: '11:45 - 12:30', subject: 'Mathematics', teacher: 'Ms. Fatima',  class: '10-A', room: 'Room 12' },
+  ],
+}
+
+// ── SALARIES ──
+export const mockSalaries = [
+  { id: 1, staffId: 1, name: 'Ms. Fatima Zahra',  empCode: 'EMP001', month: 'May 2026',   basic: 45000, present: 26, absent: 0, late: 1, generated: 44500, paid: 44500, status: 'paid'    },
+  { id: 2, staffId: 2, name: 'Mr. Kamran Iqbal',  empCode: 'EMP002', month: 'May 2026',   basic: 40000, present: 25, absent: 1, late: 2, generated: 38500, paid: 0,     status: 'unpaid'  },
+  { id: 3, staffId: 3, name: 'Ms. Sana Pervez',   empCode: 'EMP003', month: 'May 2026',   basic: 42000, present: 26, absent: 0, late: 0, generated: 42000, paid: 42000, status: 'paid'    },
+  { id: 4, staffId: 4, name: 'Mr. Bilal Hassan',  empCode: 'EMP004', month: 'May 2026',   basic: 38000, present: 24, absent: 2, late: 1, generated: 35500, paid: 0,     status: 'unpaid'  },
+  { id: 5, staffId: 5, name: 'Ms. Rabia Nawaz',   empCode: 'EMP005', month: 'May 2026',   basic: 50000, present: 26, absent: 0, late: 0, generated: 50000, paid: 50000, status: 'paid'    },
+  { id: 6, staffId: 6, name: 'Mr. Asad Khan',     empCode: 'EMP006', month: 'April 2026', basic: 35000, present: 25, absent: 1, late: 3, generated: 33500, paid: 33500, status: 'paid'    },
+]
+
+// ── BEHAVIOR ──
+export const mockBehaviorTypes = [
+  { id: 1, name: 'Punctual',     sentiment: 'positive' },
+  { id: 2, name: 'Helpful',      sentiment: 'positive' },
+  { id: 3, name: 'Hardworking',  sentiment: 'positive' },
+  { id: 4, name: 'Disruptive',   sentiment: 'negative' },
+  { id: 5, name: 'Late',         sentiment: 'negative' },
+  { id: 6, name: 'Respectful',   sentiment: 'positive' },
+  { id: 7, name: 'Inattentive',  sentiment: 'negative' },
+  { id: 8, name: 'Cooperative',  sentiment: 'positive' },
+]
+
+export const mockBehaviorRecords = [
+  { id: 1, studentId: 1, studentName: 'Ali Hassan',   date: '2026-05-14', tags: ['Punctual', 'Hardworking'], note: 'Excellent performance today', visibleToParent: true  },
+  { id: 2, studentId: 2, studentName: 'Sara Khan',    date: '2026-05-14', tags: ['Helpful', 'Cooperative'],  note: 'Very helpful in class',       visibleToParent: true  },
+  { id: 3, studentId: 3, studentName: 'Usman Raza',   date: '2026-05-14', tags: ['Disruptive', 'Late'],      note: 'Needs improvement',           visibleToParent: false },
+  { id: 4, studentId: 4, studentName: 'Ayesha Mir',   date: '2026-05-14', tags: ['Respectful'],              note: '',                            visibleToParent: true  },
+  { id: 5, studentId: 5, studentName: 'Bilal Ahmed',  date: '2026-05-13', tags: ['Inattentive'],             note: 'Was distracted in class',     visibleToParent: false },
+  { id: 6, studentId: 6, studentName: 'Hina Malik',   date: '2026-05-13', tags: ['Punctual', 'Helpful'],     note: '',                            visibleToParent: true  },
+]
+
+// ── LIBRARY ──
+export const mockBooks = [
+  { id: 1,  title: 'Mathematics Grade 10',     author: 'Punjab Textbook Board', isbn: 'PTB-001', category: 'Science',   totalCopies: 5, availableCopies: 3, publisher: 'PTB', year: 2024 },
+  { id: 2,  title: 'English Literature',        author: 'Oxford University',     isbn: 'OXF-002', category: 'English',   totalCopies: 4, availableCopies: 4, publisher: 'Oxford', year: 2023 },
+  { id: 3,  title: 'Physics Fundamentals',      author: 'Dr. Ahmad Ali',         isbn: 'PHY-003', category: 'Science',   totalCopies: 6, availableCopies: 2, publisher: 'Ilmi', year: 2024 },
+  { id: 4,  title: 'Chemistry Made Easy',       author: 'Prof. Sara Khan',       isbn: 'CHM-004', category: 'Science',   totalCopies: 4, availableCopies: 1, publisher: 'Ilmi', year: 2023 },
+  { id: 5,  title: 'Islamic Studies',           author: 'PTB',                   isbn: 'ISL-005', category: 'Islamic',   totalCopies: 8, availableCopies: 8, publisher: 'PTB', year: 2024 },
+  { id: 6,  title: 'Computer Science Basics',   author: 'Dr. Bilal Ahmed',       isbn: 'CSC-006', category: 'Computer',  totalCopies: 3, availableCopies: 0, publisher: 'Tech', year: 2024 },
+  { id: 7,  title: 'Urdu Adab',                 author: 'PTB',                   isbn: 'URD-007', category: 'Urdu',      totalCopies: 6, availableCopies: 5, publisher: 'PTB', year: 2023 },
+  { id: 8,  title: 'Pakistan Studies',          author: 'PTB',                   isbn: 'PAK-008', category: 'Social',    totalCopies: 5, availableCopies: 3, publisher: 'PTB', year: 2024 },
+]
+
+export const mockBookIssues = [
+  { id: 1, bookId: 1, bookTitle: 'Mathematics Grade 10',   studentId: 1, studentName: 'Ali Hassan',   issuedDate: '2026-05-01', dueDate: '2026-05-15', returnedDate: null,         fine: 0,   status: 'issued'   },
+  { id: 2, bookId: 3, bookTitle: 'Physics Fundamentals',   studentId: 2, studentName: 'Sara Khan',    issuedDate: '2026-05-02', dueDate: '2026-05-16', returnedDate: null,         fine: 0,   status: 'issued'   },
+  { id: 3, bookId: 4, bookTitle: 'Chemistry Made Easy',    studentId: 3, studentName: 'Usman Raza',   issuedDate: '2026-04-20', dueDate: '2026-05-04', returnedDate: null,         fine: 50,  status: 'overdue'  },
+  { id: 4, bookId: 6, bookTitle: 'Computer Science Basics',studentId: 4, studentName: 'Ayesha Mir',   issuedDate: '2026-04-25', dueDate: '2026-05-09', returnedDate: null,         fine: 25,  status: 'overdue'  },
+  { id: 5, bookId: 1, bookTitle: 'Mathematics Grade 10',   studentId: 5, studentName: 'Bilal Ahmed',  issuedDate: '2026-04-15', dueDate: '2026-04-29', returnedDate: '2026-04-28', fine: 0,   status: 'returned' },
+  { id: 6, bookId: 2, bookTitle: 'English Literature',     studentId: 6, studentName: 'Hina Malik',   issuedDate: '2026-05-05', dueDate: '2026-05-19', returnedDate: null,         fine: 0,   status: 'issued'   },
+]
+
+// ── VISITORS ──
+export const mockVisitors = [
+  { id: 1, name: 'Ahmed Raza',    cnic: '35201-1234567-1', phone: '03001234567', purpose: 'Parent Meeting',   host: 'Ms. Fatima',  hostType: 'teacher', entry: '2026-05-14 09:15', exit: '2026-05-14 10:30', vehicle: 'LHR-1234', status: 'exited',  blacklisted: false },
+  { id: 2, name: 'Bilal Sheikh',  cnic: '35201-2345678-2', phone: '03011234567', purpose: 'Fee Payment',      host: 'Accountant',  hostType: 'staff',   entry: '2026-05-14 10:00', exit: null,                vehicle: '',         status: 'inside',  blacklisted: false },
+  { id: 3, name: 'Zara Hussain',  cnic: '35201-3456789-3', phone: '03021234567', purpose: 'Document Pickup',  host: 'Admin Office',hostType: 'admin',   entry: '2026-05-14 11:30', exit: null,                vehicle: 'LHR-5678', status: 'inside',  blacklisted: false },
+  { id: 4, name: 'Kamran Malik',  cnic: '35201-4567890-4', phone: '03031234567', purpose: 'Vendor Delivery',  host: 'Store Room',  hostType: 'staff',   entry: '2026-05-13 09:00', exit: '2026-05-13 09:45', vehicle: 'LHR-9012', status: 'exited',  blacklisted: false },
+  { id: 5, name: 'Unknown Person',cnic: '35201-0000000-0', phone: '00000000000', purpose: 'Unknown',          host: '',            hostType: '',        entry: '2026-05-12 14:00', exit: '2026-05-12 14:05', vehicle: '',         status: 'exited',  blacklisted: true  },
+]
+
+export const mockBlacklist = [
+  { id: 1, name: 'Unknown Person', cnic: '35201-0000000-0', reason: 'Suspicious behavior', addedDate: '2026-05-12' },
+]
+
+// ── HEALTH RECORDS ──
+export const mockHealthRecords = [
+  { id: 1, studentId: 1, studentName: 'Ali Hassan',   bloodGroup: 'B+',  height: 165, weight: 55, conditions: ['Asthma'],          allergies: ['Dust', 'Pollen'],    vaccinations: [{ name: 'Hepatitis B', date: '2024-01-15', nextDue: '2026-01-15' }], emergencyDoctor: 'Dr. Kamran', emergencyPhone: '03001111111', hospital: 'Services Hospital' },
+  { id: 2, studentId: 2, studentName: 'Sara Khan',    bloodGroup: 'A+',  height: 158, weight: 48, conditions: [],                  allergies: ['Penicillin'],        vaccinations: [{ name: 'Typhoid',     date: '2025-03-10', nextDue: '2026-03-10' }], emergencyDoctor: 'Dr. Sana',   emergencyPhone: '03002222222', hospital: 'Shaukat Khanum'    },
+  { id: 3, studentId: 3, studentName: 'Usman Raza',   bloodGroup: 'O+',  height: 170, weight: 62, conditions: ['Diabetes'],         allergies: ['Peanuts'],           vaccinations: [{ name: 'Polio',       date: '2023-06-20', nextDue: '2025-06-20' }], emergencyDoctor: 'Dr. Ali',    emergencyPhone: '03003333333', hospital: 'Mayo Hospital'     },
+  { id: 4, studentId: 4, studentName: 'Ayesha Mir',   bloodGroup: 'AB+', height: 155, weight: 45, conditions: [],                  allergies: [],                    vaccinations: [{ name: 'Hepatitis A', date: '2024-09-05', nextDue: '2027-09-05' }], emergencyDoctor: 'Dr. Bilal',  emergencyPhone: '03004444444', hospital: 'Jinnah Hospital'   },
+  { id: 5, studentId: 5, studentName: 'Bilal Ahmed',  bloodGroup: 'B-',  height: 168, weight: 58, conditions: ['Heart Condition'],  allergies: ['Latex', 'Penicillin'],vaccinations: [],                                                                    emergencyDoctor: 'Dr. Rabia',  emergencyPhone: '03005555555', hospital: 'Services Hospital' },
+]
+
+export const mockIncidents = [
+  { id: 1, studentId: 1, studentName: 'Ali Hassan',  date: '2026-05-10', incident: 'Asthma attack during PE class', action: 'Inhaler administered, parents notified', staffInvolved: 'Ms. Fatima', parentNotified: true  },
+  { id: 2, studentId: 3, studentName: 'Usman Raza',  date: '2026-04-22', incident: 'Low blood sugar episode',       action: 'Glucose given, doctor called',          staffInvolved: 'Mr. Kamran', parentNotified: true  },
+  { id: 3, studentId: 5, studentName: 'Bilal Ahmed', date: '2026-03-15', incident: 'Chest pain complaint',          action: 'Rest given, parents called immediately', staffInvolved: 'Ms. Sana',   parentNotified: true  },
+]
+
+// ── ALUMNI ──
+export const mockAlumni = [
+  { id: 1, name: 'Hassan Raza',    batch: '2020-2021', graduationClass: 'Class 12', profession: 'Software Engineer', university: 'LUMS',         city: 'Lahore',    phone: '03001234567', email: 'hassan@gmail.com',  achievements: ['Dean\'s List 2022', 'Best Developer Award 2024'], status: 'active' },
+  { id: 2, name: 'Fatima Malik',   batch: '2020-2021', graduationClass: 'Class 12', profession: 'Doctor',           university: 'King Edward',   city: 'Lahore',    phone: '03011234567', email: 'fatima@gmail.com',  achievements: ['Gold Medal 2023'],                                 status: 'active' },
+  { id: 3, name: 'Umar Sheikh',    batch: '2021-2022', graduationClass: 'Class 12', profession: 'Business Analyst', university: 'IBA Karachi',   city: 'Karachi',   phone: '03021234567', email: 'umar@gmail.com',    achievements: [],                                                  status: 'active' },
+  { id: 4, name: 'Sobia Tariq',    batch: '2021-2022', graduationClass: 'Class 12', profession: 'Lawyer',           university: 'Punjab Univ',   city: 'Lahore',    phone: '03031234567', email: 'sobia@gmail.com',   achievements: ['Top of Class 2023'],                               status: 'active' },
+  { id: 5, name: 'Zaid Ahmed',     batch: '2022-2023', graduationClass: 'Class 12', profession: 'Student',          university: 'NUST',          city: 'Islamabad', phone: '03041234567', email: 'zaid@gmail.com',    achievements: [],                                                  status: 'active' },
+  { id: 6, name: 'Noor Fatima',    batch: '2022-2023', graduationClass: 'Class 12', profession: 'Graphic Designer', university: 'NCA Lahore',    city: 'Lahore',    phone: '03051234567', email: 'noor@gmail.com',    achievements: ['National Art Award 2024'],                         status: 'active' },
+]
+
+export const mockJobBoard = [
+  { id: 1, postedBy: 'Hassan Raza', company: 'TechCorp',    title: 'Junior Developer',   type: 'Full Time',  location: 'Lahore',    deadline: '2026-06-01', description: 'Looking for fresh graduates with React/Node skills.' },
+  { id: 2, postedBy: 'Umar Sheikh', company: 'ConsultPro',  title: 'Business Intern',    type: 'Internship', location: 'Karachi',   deadline: '2026-05-30', description: 'Summer internship opportunity for business students.' },
+  { id: 3, postedBy: 'Sobia Tariq', company: 'Law Firm LLP',title: 'Legal Assistant',    type: 'Part Time',  location: 'Lahore',    deadline: '2026-06-15', description: 'Part time position for law students.' },
+]
+
+// ── SPORTS & CO-CURRICULAR ──
+export const mockSports = [
+  { id: 1, name: 'Cricket',    coach: 'Mr. Kamran',  players: 15, wins: 8, losses: 2, draws: 1 },
+  { id: 2, name: 'Football',   coach: 'Mr. Bilal',   players: 18, wins: 5, losses: 4, draws: 2 },
+  { id: 3, name: 'Basketball', coach: 'Ms. Rabia',   players: 12, wins: 6, losses: 3, draws: 0 },
+  { id: 4, name: 'Badminton',  coach: 'Ms. Fatima',  players: 8,  wins: 4, losses: 2, draws: 0 },
+]
+
+export const mockMatches = [
+  { id: 1, sport: 'Cricket',    opponent: 'Iqbal School',    date: '2026-05-10', result: 'win',  score: '185 - 142', venue: 'Home Ground'   },
+  { id: 2, sport: 'Football',   opponent: 'Model School',    date: '2026-05-08', result: 'loss', score: '1 - 3',     venue: 'Away'          },
+  { id: 3, sport: 'Cricket',    opponent: 'Army School',     date: '2026-05-05', result: 'win',  score: '220 - 180', venue: 'Neutral Ground'},
+  { id: 4, sport: 'Basketball', opponent: 'City School',     date: '2026-05-03', result: 'win',  score: '65 - 52',   venue: 'Home Ground'   },
+  { id: 5, sport: 'Badminton',  opponent: 'Beacon House',    date: '2026-04-28', result: 'draw', score: '3 - 3',     venue: 'Away'          },
+]
+
+export const mockClubs = [
+  { id: 1, name: 'Debate Club',    coordinator: 'Ms. Fatima', members: 22, events: 5  },
+  { id: 2, name: 'Science Club',   coordinator: 'Ms. Sana',   members: 18, events: 3  },
+  { id: 3, name: 'Art Club',       coordinator: 'Ms. Rabia',  members: 15, events: 4  },
+  { id: 4, name: 'Drama Society',  coordinator: 'Mr. Kamran', members: 20, events: 2  },
+]
+
+export const mockAchievements = [
+  { id: 1, studentName: 'Ali Hassan',   type: 'Sports',       title: 'Best Batsman — District Level', level: 'District',      date: '2026-05-01' },
+  { id: 2, studentName: 'Sara Khan',    type: 'Academic',     title: 'Science Olympiad Winner',       level: 'National',      date: '2026-04-15' },
+  { id: 3, studentName: 'Usman Raza',   type: 'Co-curricular',title: 'Best Debater — Inter School',   level: 'Regional',      date: '2026-03-20' },
+  { id: 4, studentName: 'Ayesha Mir',   type: 'Arts',         title: 'National Art Competition 1st',  level: 'National',      date: '2026-02-10' },
+  { id: 5, studentName: 'Bilal Ahmed',  type: 'Sports',       title: 'Football MVP',                  level: 'School',        date: '2026-05-08' },
+]
+
+// ── STUDY MATERIALS ──
+export const mockStudyMaterials = [
+  { id: 1, title: 'Chapter 5 — Algebra Notes',        subject: 'Mathematics', class: '9-A',  teacher: 'Ms. Fatima',  type: 'document', size: '2.4 MB', uploadDate: '2026-05-10', downloads: 28 },
+  { id: 2, title: 'English Grammar — Tenses',          subject: 'English',     class: '10-B', teacher: 'Mr. Kamran',  type: 'document', size: '1.8 MB', uploadDate: '2026-05-09', downloads: 35 },
+  { id: 3, title: 'Physics Lecture — Newton Laws',     subject: 'Physics',     class: '11-A', teacher: 'Ms. Sana',    type: 'video',    size: '45 MB',  uploadDate: '2026-05-08', downloads: 42 },
+  { id: 4, title: 'Chemistry Diagrams — Acids/Bases',  subject: 'Chemistry',   class: '11-A', teacher: 'Mr. Bilal',   type: 'picture',  size: '3.2 MB', uploadDate: '2026-05-07', downloads: 19 },
+  { id: 5, title: 'Computer — Arrays & Functions',     subject: 'Computer',    class: '9-A',  teacher: 'Ms. Rabia',   type: 'document', size: '1.2 MB', uploadDate: '2026-05-06', downloads: 31 },
+  { id: 6, title: 'Mathematics — Trigonometry Video',  subject: 'Mathematics', class: '10-B', teacher: 'Ms. Fatima',  type: 'video',    size: '68 MB',  uploadDate: '2026-05-05', downloads: 55 },
+  { id: 7, title: 'English — Essay Writing Tips',      subject: 'English',     class: '9-A',  teacher: 'Mr. Kamran',  type: 'document', size: '0.9 MB', uploadDate: '2026-05-04', downloads: 47 },
+  { id: 8, title: 'Physics — Diagrams Collection',     subject: 'Physics',     class: '11-A', teacher: 'Ms. Sana',    type: 'picture',  size: '5.1 MB', uploadDate: '2026-05-03', downloads: 22 },
+]
+
+// ── HOMEWORK DIARY ──
+export const mockDiaryEntries = [
+  { id: 1, class: '10-A', section: 'A', date: '2026-05-14', createdBy: 'Ms. Fatima', homework: { Mathematics: 'Complete exercise 5.3 questions 1-10', English: 'Write essay on My Hometown (300 words)', Physics: 'Read chapter 8 and solve numericals' } },
+  { id: 2, class: '9-B',  section: 'B', date: '2026-05-14', createdBy: 'Mr. Kamran',  homework: { English: 'Learn vocabulary list 12', Mathematics: 'Solve past paper 2024 Q1-Q5' } },
+  { id: 3, class: '11-A', section: 'A', date: '2026-05-14', createdBy: 'Ms. Sana',    homework: { Physics: 'Derive equations of motion', Chemistry: 'Complete lab report on acids and bases', Mathematics: 'Solve integration problems set 3' } },
+  { id: 4, class: '10-A', section: 'A', date: '2026-05-13', createdBy: 'Ms. Fatima', homework: { Mathematics: 'Complete exercise 5.2', English: 'Read chapter 4 of novel' } },
+  { id: 5, class: '9-B',  section: 'B', date: '2026-05-13', createdBy: 'Mr. Kamran',  homework: { English: 'Write summary of chapter 3', Computer: 'Practice arrays in C++' } },
+]
+
+// ── QUIZ ──
+export const mockQuizzes = [
+  { id: 1, name: 'Mathematics Quiz 1',   description: 'Chapter 5 — Algebra',      class: '9-A',  section: 'A', questions: 10, scheduledAt: '2026-05-15 10:00', status: 'upcoming' },
+  { id: 2, name: 'English Vocabulary',   description: 'Unit 12 vocabulary test',   class: '10-B', section: 'B', questions: 15, scheduledAt: '2026-05-14 09:00', status: 'active'   },
+  { id: 3, name: 'Physics MCQs',         description: 'Chapter 8 — Motion',        class: '11-A', section: 'A', questions: 20, scheduledAt: '2026-05-13 11:00', status: 'ended'    },
+  { id: 4, name: 'Computer Quiz',        description: 'Arrays and Functions',       class: '9-A',  section: 'A', questions: 12, scheduledAt: '2026-05-12 10:00', status: 'ended'    },
+]
+
+export const mockQuizResults = [
+  { id: 1, quizId: 3, studentName: 'Ali Hassan',   score: 18, total: 20, percentage: 90 },
+  { id: 2, quizId: 3, studentName: 'Sara Khan',    score: 14, total: 20, percentage: 70 },
+  { id: 3, quizId: 3, studentName: 'Usman Raza',   score: 10, total: 20, percentage: 50 },
+  { id: 4, quizId: 4, studentName: 'Ali Hassan',   score: 10, total: 12, percentage: 83 },
+  { id: 5, quizId: 4, studentName: 'Ayesha Mir',   score: 12, total: 12, percentage: 100},
+]
+
+// ── GRADES & RESULTS ──
+export const mockGradeRules = [
+  { id: 1, grade: 'A+', from: 90, to: 100, remarks: 'Outstanding'  },
+  { id: 2, grade: 'A',  from: 80, to: 89,  remarks: 'Excellent'    },
+  { id: 3, grade: 'B+', from: 70, to: 79,  remarks: 'Very Good'    },
+  { id: 4, grade: 'B',  from: 60, to: 69,  remarks: 'Good'         },
+  { id: 5, grade: 'C',  from: 50, to: 59,  remarks: 'Average'      },
+  { id: 6, grade: 'D',  from: 40, to: 49,  remarks: 'Below Average'},
+  { id: 7, grade: 'F',  from: 0,  to: 39,  remarks: 'Fail'         },
+]
+
+export const mockResults = [
+  { id: 1, studentName: 'Ali Hassan',   class: '10-A', session: '2025-2026', subjects: { Mathematics: 88, English: 76, Physics: 92, Chemistry: 85, Computer: 90 }, published: true  },
+  { id: 2, studentName: 'Sara Khan',    class: '9-B',  session: '2025-2026', subjects: { Mathematics: 72, English: 85, Physics: 68, Chemistry: 74, Computer: 80 }, published: true  },
+  { id: 3, studentName: 'Usman Raza',   class: '11-A', session: '2025-2026', subjects: { Mathematics: 45, English: 60, Physics: 55, Chemistry: 48, Computer: 70 }, published: false },
+  { id: 4, studentName: 'Ayesha Mir',   class: '8-C',  session: '2025-2026', subjects: { Mathematics: 91, English: 88, Physics: 79, Chemistry: 83, Computer: 95 }, published: true  },
+  { id: 5, studentName: 'Bilal Ahmed',  class: '7-A',  session: '2025-2026', subjects: { Mathematics: 60, English: 55, Physics: 62, Chemistry: 58, Computer: 65 }, published: false },
+]
+// ── COMMUNICATIONS ──
+export const mockMessages = [
+  { id: 1, channel: 'whatsapp', to: 'Class 10-A Parents', message: 'Fee submission deadline is 10 May 2026. Please pay on time.', status: 'sent',   sentAt: '2026-05-14 09:00', sentBy: 'Admin' },
+  { id: 2, channel: 'whatsapp', to: 'All Staff',          message: 'Staff meeting on Friday at 2:00 PM in conference room.',     status: 'sent',   sentAt: '2026-05-13 11:00', sentBy: 'Admin' },
+  { id: 3, channel: 'email',    to: 'admin@edulink.com',  message: 'Monthly report has been generated and attached.',            status: 'sent',   sentAt: '2026-05-12 10:00', sentBy: 'Admin' },
+  { id: 4, channel: 'push',     to: 'All Students',       message: 'New study material uploaded for Mathematics Chapter 5.',     status: 'sent',   sentAt: '2026-05-11 14:00', sentBy: 'Admin' },
+  { id: 5, channel: 'whatsapp', to: 'Class 9-B Parents',  message: 'Mid term exam schedule has been published. Check portal.',   status: 'failed', sentAt: '2026-05-10 08:00', sentBy: 'Admin' },
+]
+
+// ── TRANSPORT ──
+export const mockTransportRoutes = [
+  { id: 1, routeName: 'Route A — Model Town',    vehicles: 2, description: 'Covers Model Town, Garden Town areas',       fare: 1500, students: 28 },
+  { id: 2, routeName: 'Route B — Gulberg',        vehicles: 1, description: 'Covers Gulberg I, II, III areas',            fare: 1200, students: 18 },
+  { id: 3, routeName: 'Route C — DHA Phase 1-3',  vehicles: 2, description: 'Covers DHA Phase 1, 2, 3 areas',            fare: 2000, students: 35 },
+  { id: 4, routeName: 'Route D — Johar Town',     vehicles: 1, description: 'Covers Johar Town and nearby areas',         fare: 1800, students: 22 },
+  { id: 5, routeName: 'Route E — Bahria Town',    vehicles: 2, description: 'Covers Bahria Town all phases',              fare: 2500, students: 40 },
+]
+
+// ── INVENTORY ──
+export const mockCategories = [
+  { id: 1, name: 'Stationery',  description: 'Pens, pencils, notebooks' },
+  { id: 2, name: 'Uniforms',    description: 'School uniform items'      },
+  { id: 3, name: 'Books',       description: 'Textbooks and guides'      },
+  { id: 4, name: 'Sports',      description: 'Sports equipment'          },
+]
+
+export const mockProducts = [
+  { id: 1, name: 'Blue Pen',         code: 'PRD001', category: 'Stationery', purchasePrice: 10,  salePrice: 15,   stock: 500, barcode: '123456001' },
+  { id: 2, name: 'A4 Notebook',      code: 'PRD002', category: 'Stationery', purchasePrice: 40,  salePrice: 60,   stock: 200, barcode: '123456002' },
+  { id: 3, name: 'School Shirt',     code: 'PRD003', category: 'Uniforms',   purchasePrice: 350, salePrice: 500,  stock: 80,  barcode: '123456003' },
+  { id: 4, name: 'School Trousers',  code: 'PRD004', category: 'Uniforms',   purchasePrice: 400, salePrice: 600,  stock: 60,  barcode: '123456004' },
+  { id: 5, name: 'Mathematics Book', code: 'PRD005', category: 'Books',      purchasePrice: 150, salePrice: 220,  stock: 3,   barcode: '123456005' },
+  { id: 6, name: 'Cricket Ball',     code: 'PRD006', category: 'Sports',     purchasePrice: 200, salePrice: 300,  stock: 25,  barcode: '123456006' },
+  { id: 7, name: 'Pencil Box',       code: 'PRD007', category: 'Stationery', purchasePrice: 80,  salePrice: 120,  stock: 0,   barcode: '123456007' },
+  { id: 8, name: 'Physics Book',     code: 'PRD008', category: 'Books',      purchasePrice: 180, salePrice: 260,  stock: 15,  barcode: '123456008' },
+]
+
+export const mockSales = [
+  { id: 1, buyer: 'Ali Hassan',  items: [{ name: 'Blue Pen', qty: 2, price: 15 }, { name: 'A4 Notebook', qty: 1, price: 60 }], total: 90,  method: 'Cash',  date: '2026-05-14' },
+  { id: 2, buyer: 'Sara Khan',   items: [{ name: 'School Shirt', qty: 1, price: 500 }],                                          total: 500, method: 'Card',  date: '2026-05-14' },
+  { id: 3, buyer: 'Walk-in',     items: [{ name: 'Cricket Ball', qty: 2, price: 300 }],                                          total: 600, method: 'Cash',  date: '2026-05-13' },
+]
+
 // ── STATUS STYLES (reusable across pages) ──
 export const feeStatusStyles = {
   paid: "bg-green-100 dark:bg-green-950 text-green-700 dark:text-green-400",

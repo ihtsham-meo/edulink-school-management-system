@@ -101,7 +101,7 @@ function FeeManagement() {
             className={`${card.bg} rounded-xl p-4 flex items-center gap-4`}
           >
             <div
-              className={`w-10 h-10 ${card.iconBg} rounded-lg flex items-center justify-center flex-shrink-0`}
+              className={`w-10 h-10 ${card.iconBg} rounded-lg flex items-center justify-center shrink-0`}
             >
               <card.icon size={18} className={card.text} />
             </div>
@@ -188,7 +188,7 @@ function FeeManagement() {
             >
               {/* Student */}
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center text-accent text-xs font-medium flex-shrink-0">
+                <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center text-accent text-xs font-medium shrink-0">
                   {payment.name.charAt(0)}
                 </div>
                 <span className="text-sm font-medium text-light-text-primary dark:text-dark-text-primary truncate">

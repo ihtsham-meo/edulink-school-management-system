@@ -19,7 +19,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 function StudentSidebar({ isOpen, onClose, collapsed }) {
-  const { signOut, user } = useAuth();
+  const { signOut, user, role } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -53,7 +53,7 @@ function StudentSidebar({ isOpen, onClose, collapsed }) {
         >
           {!collapsed && (
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center shrink-0">
                 <GraduationCap size={18} color="white" />
               </div>
               <div>
@@ -150,8 +150,11 @@ function StudentSidebar({ isOpen, onClose, collapsed }) {
         {/* User + Logout */}
         <div className="border-t border-light-border dark:border-dark-border p-3">
           {!collapsed && (
-            <div className="flex items-center gap-2.5 px-2 py-1.5 mb-1">
-              <div className="w-7 h-7 rounded-full bg-violet-500 flex items-center justify-center text-white text-xs font-medium flex-shrink-0">
+            <div
+              className="flex items-center gap-2.5 px-2 py-1.5 mb-1 cursor-pointer hover:bg-light-hover dark:hover:bg-dark-hover rounded-lg transition-colors"
+              onClick={() => navigate(`/${role}/profile`)}
+            >
+              <div className="w-7 h-7 rounded-full bg-violet-500 flex items-center justify-center text-white text-xs font-medium shrink-0">
                 {user?.name?.charAt(0) || "S"}
               </div>
               <div className="flex-1 min-w-0">

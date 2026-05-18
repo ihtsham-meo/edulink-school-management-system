@@ -27,7 +27,7 @@ function Topbar({ onMenuClick }) {
   });
 
   return (
-    <header className="h-14 flex items-center px-4 gap-3 bg-light-card dark:bg-dark-card border-b border-light-border dark:border-dark-border flex-shrink-0">
+    <header className="h-14 flex items-center px-4 gap-3 bg-light-card dark:bg-dark-card border-b border-light-border dark:border-dark-border shrink-0">
       {/* Menu toggle */}
       <button
         onClick={onMenuClick}

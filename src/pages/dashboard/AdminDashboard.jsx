@@ -252,7 +252,7 @@ const AdminDashboard = () => {
             {mockAnnouncements.map((a) => (
               <div key={a.id} className="flex items-start gap-3">
                 <div
-                  className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${a.color}`}
+                  className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${a.color}`}
                 />
                 <div>
                   <p className="text-light-text-primary dark:text-dark-text-primary text-sm">
@@ -305,7 +305,7 @@ const AdminDashboard = () => {
                 className="flex items-center gap-3 px-3 py-2.5 rounded-lg border border-light-border dark:border-dark-border hover:bg-light-hover dark:hover:bg-dark-hover transition-colors text-left"
               >
                 <div
-                  className={`w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0 ${action.color}`}
+                  className={`w-7 h-7 rounded-md flex items-center justify-center shrink-0 ${action.color}`}
                 >
                   <action.icon size={14} />
                 </div>

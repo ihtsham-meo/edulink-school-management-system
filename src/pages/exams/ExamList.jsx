@@ -145,7 +145,7 @@ function ExamList() {
                 }
               >
                 {/* Date badge */}
-                <div className="w-12 h-12 bg-accent/10 rounded-xl flex flex-col items-center justify-center flex-shrink-0">
+                <div className="w-12 h-12 bg-accent/10 rounded-xl flex flex-col items-center justify-center shrink-0">
                   <span className="text-accent text-base font-semibold leading-none">
                     {exam.date.split("-")[2]}
                   </span>

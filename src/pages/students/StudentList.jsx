@@ -147,7 +147,7 @@ function StudentList() {
 
               {/* Student name + avatar */}
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center text-accent text-xs font-medium flex-shrink-0">
+                <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center text-accent text-xs font-medium shrink-0">
                   {student.name.charAt(0)}
                 </div>
                 <div>

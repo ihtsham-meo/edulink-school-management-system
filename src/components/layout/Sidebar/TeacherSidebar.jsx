@@ -4,6 +4,7 @@ import {
   Users,
   Clock,
   CalendarCheck,
+  ClipboardList,
   FileText,
   Upload,
   PenLine,
@@ -21,7 +22,7 @@ import { useAuth } from "../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 function TeacherSidebar({ isOpen, onClose, collapsed }) {
-  const { signOut, user } = useAuth();
+  const { signOut, user, role } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -56,7 +57,7 @@ function TeacherSidebar({ isOpen, onClose, collapsed }) {
         >
           {!collapsed && (
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center shrink-0">
                 <GraduationCap size={18} color="white" />
               </div>
               <div>
@@ -113,6 +114,12 @@ function TeacherSidebar({ isOpen, onClose, collapsed }) {
             label="Attendance"
             collapsed={collapsed}
           />
+          <SidebarItem
+            to={ROUTES.TEACHER_BEHAVIOR}
+            icon={ClipboardList}
+            label="Student Behavior"
+            collapsed={collapsed}
+          />
 
           {!collapsed && <SidebarSection label="Assignments" />}
           <SidebarItem
@@ -151,7 +158,12 @@ function TeacherSidebar({ isOpen, onClose, collapsed }) {
             label="Exam Schedule"
             collapsed={collapsed}
           />
-          <SidebarItem to="/teacher/results" icon={BarChart3} label="Results" collapsed={collapsed} />
+          <SidebarItem
+            to="/teacher/results"
+            icon={BarChart3}
+            label="Results"
+            collapsed={collapsed}
+          />
 
           {!collapsed && <SidebarSection label="More" />}
           <SidebarItem
@@ -183,19 +195,23 @@ function TeacherSidebar({ isOpen, onClose, collapsed }) {
         {/* User + Logout */}
         <div className="border-t border-light-border dark:border-dark-border p-3">
           {!collapsed && (
-          <div className="flex items-center gap-2.5 px-2 py-1.5 mb-1">
-            <div className="w-7 h-7 rounded-full bg-emerald-500 flex items-center justify-center text-white text-xs font-medium flex-shrink-0">
-              {user?.name?.charAt(0) || "T"}
+            <div
+              className="flex items-center gap-2.5 px-2 py-1.5 mb-1 cursor-pointer hover:bg-light-hover dark:hover:bg-dark-hover rounded-lg transition-colors"
+              onClick={() => navigate(`/${role}/profile`)}
+            >
+              <div className="w-7 h-7 rounded-full bg-emerald-500 flex items-center justify-center text-white text-xs font-medium shrink-0">
+                {user?.name?.charAt(0) || "T"}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-light-text-primary dark:text-dark-text-primary text-xs font-medium truncate">
+                  {user?.name || "Teacher"}
+                </p>
+                <p className="text-light-text-tertiary dark:text-dark-text-tertiary text-xs truncate">
+                  {user?.email || ""}
+                </p>
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-light-text-primary dark:text-dark-text-primary text-xs font-medium truncate">
-                {user?.name || "Teacher"}
-              </p>
-              <p className="text-light-text-tertiary dark:text-dark-text-tertiary text-xs truncate">
-                {user?.email || ""}
-              </p>
-            </div>
-          </div> )}
+          )}
           <button
             onClick={handleLogout}
             title={collapsed ? "Logout" : undefined}

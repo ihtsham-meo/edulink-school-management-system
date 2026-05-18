@@ -6,6 +6,7 @@ import {
   Building2,
   BookOpen,
   CalendarCheck,
+  ClipboardList,
   Clock,
   FileText,
   PenLine,
@@ -13,6 +14,7 @@ import {
   Banknote,
   BookMarked,
   Megaphone,
+  MessageSquareText,
   Settings,
   HeartPulse,
   UserSquare2,
@@ -24,7 +26,6 @@ import { NavLink, useNavigate } from "react-router-dom";
 import SidebarSection from "./SidebarSection";
 import { ROUTES } from "../../../constants/routes";
 import { useAuth } from "../../../hooks/useAuth";
-
 function NavItem({
   to,
   icon: Icon,
@@ -52,7 +53,7 @@ function NavItem({
         }`
       }
     >
-      {Icon && <Icon size={17} className="flex-shrink-0" />}
+      {Icon && <Icon size={17} className="shrink-0" />}
       {!collapsed && (
         <>
           <span className="flex-1 truncate">{label}</span>
@@ -70,7 +71,7 @@ function NavItem({
 }
 
 function AdminSidebar({ isOpen, onClose, collapsed }) {
-  const { signOut, user } = useAuth();
+  const { signOut, user, role } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -105,7 +106,7 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
         >
           {!collapsed && (
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center shrink-0">
                 <GraduationCap size={18} color="white" />
               </div>
               <div>
@@ -162,6 +163,12 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
             to={ROUTES.ADMIN_CLASSES}
             icon={Building2}
             label="Classes & Sections"
+            collapsed={collapsed}
+          />
+          <NavItem
+            to={ROUTES.ADMIN_BEHAVIOR}
+            icon={ClipboardList}
+            label="Student Behavior"
             collapsed={collapsed}
           />
 
@@ -266,7 +273,7 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
           />
           <NavItem
             to="/admin/communications"
-            icon={Megaphone}
+            icon={MessageSquareText}
             label="Communications"
             collapsed={collapsed}
           />
@@ -283,8 +290,11 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
         {/* User + Logout */}
         <div className="border-t border-light-border dark:border-dark-border p-3">
           {!collapsed && (
-            <div className="flex items-center gap-2.5 px-2 py-1.5 mb-1">
-              <div className="w-7 h-7 rounded-full bg-accent flex items-center justify-center text-white text-xs font-medium flex-shrink-0">
+            <div
+              className="flex items-center gap-2.5 px-2 py-1.5 mb-1 cursor-pointer hover:bg-light-hover dark:hover:bg-dark-hover rounded-lg transition-colors"
+              onClick={() => navigate(`/${role}/profile`)}
+            >
+              <div className="w-7 h-7 rounded-full bg-accent flex items-center justify-center text-white text-xs font-medium shrink-0">
                 {user?.name?.charAt(0) || "A"}
               </div>
               <div className="flex-1 min-w-0">

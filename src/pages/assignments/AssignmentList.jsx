@@ -103,7 +103,7 @@ function AssignmentList() {
             className={`${card.bg} rounded-xl p-4 flex items-center gap-4`}
           >
             <div
-              className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${card.bg}`}
+              className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${card.bg}`}
             >
               <card.icon size={20} className={card.text} />
             </div>
@@ -183,7 +183,7 @@ function AssignmentList() {
                 }
               >
                 {/* Icon */}
-                <div className="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center shrink-0">
                   <FileText size={18} className="text-accent" />
                 </div>
 

@@ -97,7 +97,7 @@ function TeacherDashboard() {
                 {p.done && (
                   <CheckSquare
                     size={15}
-                    className="text-emerald-500 flex-shrink-0"
+                    className="text-emerald-500 shrink-0"
                   />
                 )}
               </div>
@@ -121,7 +121,7 @@ function TeacherDashboard() {
                 key={a.id}
                 className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-light-hover dark:hover:bg-dark-hover transition-colors"
               >
-                <div className="w-8 h-8 bg-accent/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                <div className="w-8 h-8 bg-accent/10 rounded-lg flex items-center justify-center shrink-0">
                   <FileText size={14} className="text-accent" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -133,7 +133,7 @@ function TeacherDashboard() {
                   </p>
                 </div>
                 <span
-                  className={`text-xs px-2 py-0.5 rounded-md font-medium flex-shrink-0 ${assignmentStatusStyles[a.status]}`}
+                  className={`text-xs px-2 py-0.5 rounded-md font-medium shrink-0 ${assignmentStatusStyles[a.status]}`}
                 >
                   {a.status.charAt(0).toUpperCase() + a.status.slice(1)}
                 </span>

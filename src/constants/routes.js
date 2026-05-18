@@ -15,6 +15,7 @@ export const ROUTES = {
   ADMIN_EXAMS: "/admin/exams",
   ADMIN_FEES: "/admin/fees",
   ADMIN_SALARY: "/admin/salary",
+  ADMIN_BEHAVIOR: "/admin/behavior",
   ADMIN_SETTINGS: "/admin/settings",
 
   // Teacher
@@ -23,6 +24,7 @@ export const ROUTES = {
   TEACHER_ATTENDANCE: "/teacher/attendance",
   TEACHER_ASSIGNMENTS: "/teacher/assignments",
   TEACHER_GRADES: "/teacher/grades",
+  TEACHER_BEHAVIOR: "/teacher/behavior",
 
   // Student
   STUDENT_DASHBOARD: "/student/dashboard",

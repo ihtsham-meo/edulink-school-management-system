@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Check, X, Clock, Calendar, Save, CheckSquare } from "lucide-react";
+import DatePicker from "../../components/common/DatePicker";
 import PageHeader from "../../components/common/PageHeader";
 import {
   mockAttendanceStudents,
@@ -117,14 +118,13 @@ function StudentAttendance() {
           </select>
 
           {/* Date picker */}
-          <input
-            type="date"
+          <DatePicker
             value={date}
-            onChange={(e) => {
-              setDate(e.target.value);
+            onChange={(value) => {
+              setDate(value);
               setSaved(false);
             }}
-            className="px-3 py-2 rounded-lg bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border text-light-text-primary dark:text-dark-text-primary text-sm outline-none focus:border-accent transition-colors"
+            className="sm:w-[220px]"
           />
 
           <div className="flex-1" />
@@ -219,7 +219,7 @@ function StudentAttendance() {
 
               {/* Student info */}
               <div className="col-span-5 flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center text-accent text-xs font-medium flex-shrink-0">
+                <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center text-accent text-xs font-medium shrink-0">
                   {student.name.charAt(0)}
                 </div>
                 <div>
