@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {
   Plus,
   Building2,
@@ -8,40 +8,209 @@ import {
   Trash2,
   ChevronDown,
   ChevronUp,
+  AlertCircle,
 } from "lucide-react";
 import PageHeader from "../../components/common/PageHeader";
-import { mockClasses, mockStudents } from "../../data/mockData";
+import { classService } from "../../services/classService";
+import {
+  CrudModal,
+  DetailGrid,
+  Field,
+  ModalButton,
+} from "../../components/common/CrudModal";
+
+const normalizeClasses = (payload) => {
+  const items = Array.isArray(payload)
+    ? payload
+    : payload?.data?.classes ||
+      payload?.classes ||
+      payload?.data ||
+      [];
+
+  const list = Array.isArray(items) ? items : items?.id ? [items] : [];
+
+  return list.map((item) => ({
+    ...item,
+    id: item.id,
+    name: item.name || "",
+    level: item.level,
+    sections: Array.isArray(item.sections)
+      ? item.sections
+      : String(item.sections || "")
+          .split(",")
+          .map((section) => section.trim())
+          .filter(Boolean),
+    students: Number(item.students || item.students_count || item.students_count_total || 0),
+    fee: Number(item.fee || item.monthly_fee || 0),
+  }));
+};
+
+const getClassLevel = (name) => {
+  const match = String(name).match(/\d+/);
+  return match ? Number(match[0]) : 1;
+};
 
 function ClassList() {
+  const [classes, setClasses] = useState([]);
+  const [apiMode, setApiMode] = useState("api");
+  const [error, setError] = useState("");
   const [expandedId, setExpanded] = useState(null);
   const [search, setSearch] = useState("");
+  const [modalMode, setModalMode] = useState(null);
+  const [selectedClass, setSelectedClass] = useState(null);
+  const [form, setForm] = useState({ name: "", sections: "", students: "", fee: "" });
+  const [errors, setErrors] = useState({});
 
-  // Count students per class
-  const studentCounts = useMemo(() => {
-    return mockStudents.reduce((acc, s) => {
-      const className = s.class.split("-")[0]; // e.g. "10" from "10-A"
-      acc[className] = (acc[className] || 0) + 1;
-      return acc;
-    }, {});
+  useEffect(() => {
+    const loadClasses = async () => {
+      setError("");
+
+      try {
+        const response = await classService.getAll();
+        const apiClasses = normalizeClasses(response.data);
+        setClasses(apiClasses);
+        setApiMode("api");
+      } catch (err) {
+        setClasses([]);
+        setError(err.response?.data?.message || "Could not load classes from the backend.");
+      }
+    };
+
+    loadClasses();
   }, []);
 
   const filtered = useMemo(() => {
-    return mockClasses.filter((c) =>
+    return classes.filter((c) =>
       c.name.toLowerCase().includes(search.toLowerCase()),
     );
-  }, [search]);
+  }, [classes, search]);
 
   const summary = useMemo(
     () => ({
-      totalClasses: mockClasses.length,
-      totalSections: mockClasses.reduce((sum, c) => sum + c.sections.length, 0),
-      totalStudents: mockStudents.length,
-      avgFee: Math.round(
-        mockClasses.reduce((sum, c) => sum + c.fee, 0) / mockClasses.length,
-      ),
+      totalClasses: classes.length,
+      totalSections: classes.reduce((sum, c) => sum + c.sections.length, 0),
+      totalStudents: classes.reduce((sum, c) => sum + c.students, 0),
+      avgFee: classes.length
+        ? Math.round(classes.reduce((sum, c) => sum + c.fee, 0) / classes.length)
+        : 0,
     }),
-    [],
+    [classes],
   );
+
+  const openClassForm = (cls = null) => {
+    setSelectedClass(cls);
+    setErrors({});
+    setForm(
+      cls
+        ? {
+            name: cls.name,
+            sections: cls.sections.join(", "),
+            students: String(cls.students),
+            fee: String(cls.fee),
+          }
+        : { name: "", sections: "A", students: "0", fee: "" },
+    );
+    setModalMode("form");
+  };
+
+  const validate = () => {
+    const nextErrors = {};
+    if (!form.name.trim()) nextErrors.name = "Class name is required";
+    if (!form.sections.trim()) nextErrors.sections = "At least one section is required";
+    if (!form.fee || Number(form.fee) < 1) nextErrors.fee = "Fee must be greater than 0";
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  };
+
+  const handleSave = async () => {
+    if (!validate()) return;
+    const payload = {
+      academic_year_id: selectedClass?.academic_year_id || 1,
+      name: form.name.trim(),
+      level: selectedClass?.level || getClassLevel(form.name),
+      sections: form.sections
+        .split(",")
+        .map((section) => section.trim().toUpperCase())
+        .filter(Boolean),
+      students: Number(form.students) || 0,
+      fee: Number(form.fee),
+    };
+
+    try {
+      if (selectedClass) {
+        if (apiMode === "api") {
+          await classService.update(selectedClass.id, {
+            name: payload.name,
+            level: payload.level,
+          });
+        }
+        setClasses((prev) =>
+          prev.map((cls) =>
+            cls.id === selectedClass.id ? { ...cls, ...payload } : cls,
+          ),
+        );
+      } else {
+        let createdClass = { ...payload, id: Date.now() };
+        if (apiMode === "api") {
+          const response = await classService.create({
+            academic_year_id: payload.academic_year_id,
+            name: payload.name,
+            level: payload.level,
+          });
+          createdClass =
+            normalizeClasses(response.data).at(0) ||
+            response.data?.data ||
+            response.data ||
+            createdClass;
+        }
+        setClasses((prev) => [createdClass, ...prev]);
+      }
+      setModalMode(null);
+    } catch {
+      setError("Something went wrong while saving the class. Please try again.");
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      if (apiMode === "api") {
+        await classService.delete(selectedClass.id);
+      }
+      setClasses((prev) => prev.filter((cls) => cls.id !== selectedClass.id));
+      setExpanded((id) => (id === selectedClass.id ? null : id));
+      setModalMode(null);
+    } catch {
+      setError("Something went wrong while deleting the class. Please try again.");
+    }
+  };
+
+  const handleAddSection = (cls) => {
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const nextSection =
+      alphabet
+        .split("")
+        .find((letter) => !cls.sections.includes(letter)) || `S${cls.sections.length + 1}`;
+    setClasses((prev) =>
+      prev.map((item) =>
+        item.id === cls.id
+          ? { ...item, sections: [...item.sections, nextSection] }
+          : item,
+      ),
+    );
+  };
+
+  const handleDeleteSection = (cls, section) => {
+    setClasses((prev) =>
+      prev.map((item) =>
+        item.id === cls.id
+          ? {
+              ...item,
+              sections: item.sections.filter((current) => current !== section),
+            }
+          : item,
+      ),
+    );
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -49,12 +218,22 @@ function ClassList() {
         title="Classes & Sections"
         subtitle="Manage all classes and their sections"
         action={
-          <button className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover text-white text-sm font-medium rounded-lg transition-colors">
+          <button
+            onClick={() => openClassForm()}
+            className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover text-white text-sm font-medium rounded-lg transition-colors"
+          >
             <Plus size={16} />
             Add Class
           </button>
         }
       />
+
+      {error && (
+        <div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-300">
+          <AlertCircle size={17} className="mt-0.5 shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
 
       {/* Summary */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -163,6 +342,7 @@ function ClassList() {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
+                    openClassForm(cls);
                   }}
                   className="w-7 h-7 flex items-center justify-center rounded-lg text-light-text-tertiary dark:text-dark-text-tertiary hover:bg-amber-50 dark:hover:bg-amber-950 hover:text-amber-600 transition-colors"
                 >
@@ -171,6 +351,8 @@ function ClassList() {
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
+                    setSelectedClass(cls);
+                    setModalMode("delete");
                   }}
                   className="w-7 h-7 flex items-center justify-center rounded-lg text-light-text-tertiary dark:text-dark-text-tertiary hover:bg-red-50 dark:hover:bg-red-950 hover:text-red-600 transition-colors"
                 >
@@ -197,7 +379,10 @@ function ClassList() {
                   <p className="text-xs font-semibold text-light-text-secondary dark:text-dark-text-secondary uppercase tracking-wide">
                     Sections
                   </p>
-                  <button className="flex items-center gap-1.5 text-xs text-accent hover:underline">
+                  <button
+                    onClick={() => handleAddSection(cls)}
+                    className="flex items-center gap-1.5 text-xs text-accent hover:underline"
+                  >
                     <Plus size={12} />
                     Add Section
                   </button>
@@ -214,20 +399,27 @@ function ClassList() {
                         </p>
                         <p className="text-xs text-light-text-tertiary dark:text-dark-text-tertiary mt-0.5">
                           {
-                            mockStudents.filter(
-                              (s) =>
-                                s.class ===
-                                `${cls.name.split(" ")[1]}-${section}`,
-                            ).length
+                            cls.sections_count?.[section] ||
+                            cls.section_counts?.[section] ||
+                            0
                           }{" "}
                           students
                         </p>
                       </div>
                       <div className="flex gap-1">
-                        <button className="w-6 h-6 flex items-center justify-center rounded-md text-light-text-tertiary dark:text-dark-text-tertiary hover:bg-amber-50 dark:hover:bg-amber-950 hover:text-amber-600 transition-colors">
+                        <button
+                          onClick={() => {
+                            setSelectedClass(cls);
+                            setModalMode("view");
+                          }}
+                          className="w-6 h-6 flex items-center justify-center rounded-md text-light-text-tertiary dark:text-dark-text-tertiary hover:bg-amber-50 dark:hover:bg-amber-950 hover:text-amber-600 transition-colors"
+                        >
                           <Pencil size={12} />
                         </button>
-                        <button className="w-6 h-6 flex items-center justify-center rounded-md text-light-text-tertiary dark:text-dark-text-tertiary hover:bg-red-50 dark:hover:bg-red-950 hover:text-red-600 transition-colors">
+                        <button
+                          onClick={() => handleDeleteSection(cls, section)}
+                          className="w-6 h-6 flex items-center justify-center rounded-md text-light-text-tertiary dark:text-dark-text-tertiary hover:bg-red-50 dark:hover:bg-red-950 hover:text-red-600 transition-colors"
+                        >
                           <Trash2 size={12} />
                         </button>
                       </div>
@@ -285,6 +477,62 @@ function ClassList() {
           </div>
         )}
       </div>
+
+      {modalMode === "form" && (
+        <CrudModal
+          title={selectedClass ? "Edit Class" : "Add Class"}
+          onClose={() => setModalMode(null)}
+          footer={
+            <>
+              <ModalButton onClick={() => setModalMode(null)}>Cancel</ModalButton>
+              <ModalButton variant="primary" onClick={handleSave}>
+                {selectedClass ? "Save Changes" : "Add Class"}
+              </ModalButton>
+            </>
+          }
+        >
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Field label="Class Name" value={form.name} error={errors.name} placeholder="Class 10" onChange={(value) => setForm((prev) => ({ ...prev, name: value }))} />
+            <Field label="Sections" value={form.sections} error={errors.sections} placeholder="A, B, C" onChange={(value) => setForm((prev) => ({ ...prev, sections: value }))} />
+            <Field label="Students" type="number" value={form.students} onChange={(value) => setForm((prev) => ({ ...prev, students: value }))} />
+            <Field label="Monthly Fee" type="number" value={form.fee} error={errors.fee} onChange={(value) => setForm((prev) => ({ ...prev, fee: value }))} />
+          </div>
+        </CrudModal>
+      )}
+
+      {modalMode === "view" && selectedClass && (
+        <CrudModal title="Class Details" onClose={() => setModalMode(null)}>
+          <DetailGrid
+            items={[
+              ["Name", selectedClass.name],
+              ["Sections", selectedClass.sections.join(", ")],
+              ["Students", selectedClass.students],
+              ["Monthly Fee", `Rs ${selectedClass.fee.toLocaleString()}`],
+            ]}
+          />
+        </CrudModal>
+      )}
+
+      {modalMode === "delete" && selectedClass && (
+        <CrudModal
+          title="Delete Class"
+          onClose={() => setModalMode(null)}
+          footer={
+            <>
+              <ModalButton onClick={() => setModalMode(null)}>Cancel</ModalButton>
+              <ModalButton variant="danger" onClick={handleDelete}>Delete</ModalButton>
+            </>
+          }
+        >
+          <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+            Are you sure you want to delete{" "}
+            <span className="font-semibold text-light-text-primary dark:text-dark-text-primary">
+              {selectedClass.name}
+            </span>
+            ?
+          </p>
+        </CrudModal>
+      )}
     </div>
   );
 }

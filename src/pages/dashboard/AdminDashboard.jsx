@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Users,
   UserCheck,
@@ -27,8 +28,24 @@ import {
   mockAnnouncements,
   feeStatusStyles,
 } from "../../data/mockData";
+import { dashboardService } from "../../services/dashboardService";
 
 const AdminDashboard = () => {
+  const [stats, setStats] = useState({});
+
+  useEffect(() => {
+    const loadStats = async () => {
+      try {
+        const response = await dashboardService.getAdminStats();
+        setStats(response.data?.data || response.data || {});
+      } catch {
+        setStats({});
+      }
+    };
+
+    loadStats();
+  }, []);
+
   return (
     <div className="flex flex-col gap-6">
       {/* Page header */}
@@ -45,57 +62,57 @@ const AdminDashboard = () => {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Total Students"
-          value="1,248"
-          subtitle="+12 this month"
+          value={stats.total_students ?? stats.students_count ?? 0}
+          subtitle="From backend"
           icon={GraduationCap}
           gradient="blue"
         />
         <StatCard
           title="Total Teachers"
-          value="64"
-          subtitle="4 vacancies"
+          value={stats.total_teachers ?? stats.teachers_count ?? 0}
+          subtitle="From backend"
           icon={UserCheck}
           gradient="green"
         />
         <StatCard
           title="Fee Collected"
-          value="Rs 4.2L"
-          subtitle="Rs 80K pending"
+          value={stats.fee_collected ? `Rs ${stats.fee_collected}` : "Rs 0"}
+          subtitle="From backend"
           icon={Banknote}
           gradient="orange"
         />
         <StatCard
           title="Active Classes"
-          value="28"
-          subtitle="All sections active"
+          value={stats.active_classes ?? stats.classes_count ?? 0}
+          subtitle="From backend"
           icon={Building2}
           gradient="purple"
         />
         <StatCard
           title="Monthly Income"
-          value="Rs 4.2L"
-          subtitle="May 2026"
+          value={stats.monthly_income ? `Rs ${stats.monthly_income}` : "Rs 0"}
+          subtitle="From backend"
           icon={TrendingUp}
           gradient="ocean"
         />
         <StatCard
           title="Monthly Expense"
-          value="Rs 1.8L"
-          subtitle="May 2026"
+          value={stats.monthly_expense ? `Rs ${stats.monthly_expense}` : "Rs 0"}
+          subtitle="From backend"
           icon={TrendingDown}
           gradient="fire"
         />
         <StatCard
           title="Unpaid Invoices"
-          value="23"
-          subtitle="Rs 80K pending"
+          value={stats.unpaid_invoices ?? 0}
+          subtitle="From backend"
           icon={AlertCircle}
           gradient="candy"
         />
         <StatCard
           title="Total Staff"
-          value="64"
-          subtitle="6 departments"
+          value={stats.total_staff ?? stats.staff_count ?? 0}
+          subtitle="From backend"
           icon={Users}
           gradient="aurora"
         />

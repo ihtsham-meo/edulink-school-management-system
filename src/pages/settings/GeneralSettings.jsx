@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Settings,
   MessageCircle,
   BookOpen,
   Zap,
   Save,
-  School,
+  AlertCircle,
 } from "lucide-react";
 import PageHeader from "../../components/common/PageHeader";
+import { settingsService } from "../../services/settingsService";
 
 const tabs = [
   { id: "general", label: "General", icon: Settings },
@@ -94,19 +95,8 @@ function SectionCard({ title, children }) {
   );
 }
 
-function GeneralTab() {
-  const [form, setForm] = useState({
-    schoolName: "City Housing School",
-    schoolEmail: "info@cityhousing.edu.pk",
-    phone: "042-35761234",
-    address: "City Housing Society, Lahore",
-    currency: "PKR",
-    session: "2025-2026",
-    institutionType: "school",
-    rollSequence: "1",
-  });
-
-  const set = (key, val) => setForm((prev) => ({ ...prev, [key]: val }));
+function GeneralTab({ form, onChange }) {
+  const set = (key, val) => onChange((prev) => ({ ...prev, [key]: val }));
 
   return (
     <div className="flex flex-col gap-5">
@@ -153,24 +143,20 @@ function GeneralTab() {
               { value: "institute", label: "Institute" },
             ]}
           />
-          <SelectField
+          <InputField
             label="Running Session"
             value={form.session}
             onChange={(e) => set("session", e.target.value)}
-            options={[
-              { value: "2024-2025", label: "2024-2025" },
-              { value: "2025-2026", label: "2025-2026" },
-              { value: "2026-2027", label: "2026-2027" },
-            ]}
+            placeholder="2025-2026"
           />
           <SelectField
             label="Currency"
             value={form.currency}
             onChange={(e) => set("currency", e.target.value)}
             options={[
-              { value: "PKR", label: "PKR — Pakistani Rupee" },
-              { value: "USD", label: "USD — US Dollar" },
-              { value: "GBP", label: "GBP — British Pound" },
+              { value: "PKR", label: "PKR - Pakistani Rupee" },
+              { value: "USD", label: "USD - US Dollar" },
+              { value: "GBP", label: "GBP - British Pound" },
             ]}
           />
           <InputField
@@ -185,6 +171,17 @@ function GeneralTab() {
     </div>
   );
 }
+
+const defaultGeneralForm = {
+    schoolName: "",
+    schoolEmail: "",
+    phone: "",
+    address: "",
+    currency: "PKR",
+    session: "",
+    institutionType: "school",
+    rollSequence: "1",
+};
 
 function WhatsAppTab() {
   const [form, setForm] = useState({
@@ -386,16 +383,57 @@ function AutomationTab() {
 function GeneralSettings() {
   const [activeTab, setTab] = useState("general");
   const [saved, setSaved] = useState(false);
+  const [error, setError] = useState("");
+  const [generalForm, setGeneralForm] = useState(defaultGeneralForm);
 
-  const handleSave = () => {
-    setSaved(true);
-    setTimeout(() => setSaved(false), 2000);
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const response = await settingsService.getSchoolProfile();
+        const profile = response.data?.data || response.data || {};
+        setGeneralForm((prev) => ({
+          ...prev,
+          schoolName: profile.name || profile.school_name || "",
+          schoolEmail: profile.email || "",
+          phone: profile.phone || "",
+          address: profile.address || "",
+          institutionType: profile.institution_type || "school",
+          currency: profile.currency || "PKR",
+          session: profile.session || profile.current_session || "",
+          rollSequence: String(profile.roll_sequence || 1),
+        }));
+      } catch (err) {
+        setError(err.response?.data?.message || "Could not load school profile.");
+      }
+    };
+
+    loadProfile();
+  }, []);
+
+  const handleSave = async () => {
+    try {
+      await settingsService.updateSchoolProfile({
+        name: generalForm.schoolName,
+        email: generalForm.schoolEmail,
+        phone: generalForm.phone,
+        address: generalForm.address,
+        institution_type: generalForm.institutionType,
+        currency: generalForm.currency,
+        session: generalForm.session,
+        roll_sequence: generalForm.rollSequence,
+      });
+      setSaved(true);
+      setError("");
+      setTimeout(() => setSaved(false), 2000);
+    } catch (err) {
+      setError(err.response?.data?.message || "Could not save school profile.");
+    }
   };
 
   const renderTab = () => {
     switch (activeTab) {
       case "general":
-        return <GeneralTab />;
+        return <GeneralTab form={generalForm} onChange={setGeneralForm} />;
       case "whatsapp":
         return <WhatsAppTab />;
       case "exam":
@@ -425,6 +463,13 @@ function GeneralSettings() {
           </button>
         }
       />
+
+      {error && (
+        <div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-300">
+          <AlertCircle size={17} className="mt-0.5 shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
 
       {/* Tabs */}
       <div className="flex gap-2 bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border rounded-xl p-1.5">

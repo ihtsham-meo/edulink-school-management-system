@@ -12,6 +12,13 @@ import {
 } from "lucide-react";
 import PageHeader from "../../components/common/PageHeader";
 import { mockNotices } from "../../data/mockData";
+import {
+  CrudModal,
+  ModalButton,
+  SelectField,
+  TextAreaField,
+  Field,
+} from "../../components/common/CrudModal";
 
 const targetStyles = {
   all: {
@@ -41,7 +48,10 @@ function Noticeboard() {
   const [selectedTarget, setTarget] = useState("All");
   const [showModal, setShowModal] = useState(false);
   const [notices, setNotices] = useState(mockNotices);
+  const [selectedNotice, setSelectedNotice] = useState(null);
+  const [deleteNotice, setDeleteNotice] = useState(null);
   const [form, setForm] = useState({ title: "", content: "", target: "all" });
+  const [errors, setErrors] = useState({});
 
   const filtered = useMemo(() => {
     return notices.filter((n) => {
@@ -57,31 +67,71 @@ function Noticeboard() {
   const pinned = filtered.filter((n) => n.pinned);
   const unpinned = filtered.filter((n) => !n.pinned);
 
-  const handleDelete = (id) => {
-    setNotices((prev) => prev.filter((n) => n.id !== id));
-  };
-
   const handleTogglePin = (id) => {
     setNotices((prev) =>
       prev.map((n) => (n.id === id ? { ...n, pinned: !n.pinned } : n)),
     );
   };
 
-  const handlePost = () => {
-    if (!form.title.trim() || !form.content.trim()) return;
-    const newNotice = {
-      id: notices.length + 1,
-      title: form.title,
-      content: form.content,
+  const openAddModal = () => {
+    setSelectedNotice(null);
+    setErrors({});
+    setForm({ title: "", content: "", target: "all" });
+    setShowModal(true);
+  };
+
+  const openEditModal = (notice) => {
+    setSelectedNotice(notice);
+    setErrors({});
+    setForm({
+      title: notice.title,
+      content: notice.content,
+      target: notice.target,
+    });
+    setShowModal(true);
+  };
+
+  const validate = () => {
+    const nextErrors = {};
+    if (!form.title.trim()) nextErrors.title = "Title is required";
+    if (!form.content.trim()) nextErrors.content = "Content is required";
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  };
+
+  const handleSave = () => {
+    if (!validate()) return;
+    const payload = {
+      title: form.title.trim(),
+      content: form.content.trim(),
       target: form.target,
-      postedBy: "Admin",
-      date: new Date().toISOString().split("T")[0],
-      image: false,
-      pinned: false,
     };
-    setNotices((prev) => [newNotice, ...prev]);
+
+    if (selectedNotice) {
+      setNotices((prev) =>
+        prev.map((notice) =>
+          notice.id === selectedNotice.id ? { ...notice, ...payload } : notice,
+        ),
+      );
+    } else {
+      const newNotice = {
+        ...payload,
+        id: Date.now(),
+        postedBy: "Admin",
+        date: new Date().toISOString().split("T")[0],
+        image: false,
+        pinned: false,
+      };
+      setNotices((prev) => [newNotice, ...prev]);
+    }
+
     setForm({ title: "", content: "", target: "all" });
     setShowModal(false);
+  };
+
+  const handleDelete = () => {
+    setNotices((prev) => prev.filter((notice) => notice.id !== deleteNotice.id));
+    setDeleteNotice(null);
   };
 
   const NoticeCard = ({ notice }) => {
@@ -139,11 +189,14 @@ function Noticeboard() {
             >
               <Pin size={13} />
             </button>
-            <button className="w-7 h-7 flex items-center justify-center rounded-lg text-light-text-tertiary dark:text-dark-text-tertiary hover:bg-amber-50 dark:hover:bg-amber-950 hover:text-amber-600 transition-colors">
+            <button
+              onClick={() => openEditModal(notice)}
+              className="w-7 h-7 flex items-center justify-center rounded-lg text-light-text-tertiary dark:text-dark-text-tertiary hover:bg-amber-50 dark:hover:bg-amber-950 hover:text-amber-600 transition-colors"
+            >
               <Pencil size={13} />
             </button>
             <button
-              onClick={() => handleDelete(notice.id)}
+              onClick={() => setDeleteNotice(notice)}
               className="w-7 h-7 flex items-center justify-center rounded-lg text-light-text-tertiary dark:text-dark-text-tertiary hover:bg-red-50 dark:hover:bg-red-950 hover:text-red-600 transition-colors"
             >
               <Trash2 size={13} />
@@ -166,7 +219,7 @@ function Noticeboard() {
         subtitle="Post and manage school announcements"
         action={
           <button
-            onClick={() => setShowModal(true)}
+            onClick={openAddModal}
             className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover text-white text-sm font-medium rounded-lg transition-colors"
           >
             <Plus size={16} />
@@ -251,73 +304,67 @@ function Noticeboard() {
 
       {/* Post Notice Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border rounded-xl p-6 w-full max-w-lg">
-            <h2 className="text-base font-semibold text-light-text-primary dark:text-dark-text-primary mb-5">
-              Post New Notice
-            </h2>
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-light-text-primary dark:text-dark-text-primary">
-                  Title
-                </label>
-                <input
-                  type="text"
-                  value={form.title}
-                  onChange={(e) =>
-                    setForm((prev) => ({ ...prev, title: e.target.value }))
-                  }
-                  placeholder="Notice title"
-                  className="w-full px-4 py-2.5 rounded-lg bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border text-light-text-primary dark:text-dark-text-primary text-sm outline-none focus:border-accent transition-colors"
-                />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-light-text-primary dark:text-dark-text-primary">
-                  Content
-                </label>
-                <textarea
-                  value={form.content}
-                  onChange={(e) =>
-                    setForm((prev) => ({ ...prev, content: e.target.value }))
-                  }
-                  placeholder="Write your notice here..."
-                  rows={4}
-                  className="w-full px-4 py-2.5 rounded-lg bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border text-light-text-primary dark:text-dark-text-primary text-sm outline-none focus:border-accent transition-colors resize-none"
-                />
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-medium text-light-text-primary dark:text-dark-text-primary">
-                  Target Audience
-                </label>
-                <select
-                  value={form.target}
-                  onChange={(e) =>
-                    setForm((prev) => ({ ...prev, target: e.target.value }))
-                  }
-                  className="w-full px-4 py-2.5 rounded-lg bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border text-light-text-primary dark:text-dark-text-primary text-sm outline-none focus:border-accent transition-colors"
-                >
-                  <option value="all">Everyone</option>
-                  <option value="staff">Staff only</option>
-                  <option value="student">Students only</option>
-                </select>
-              </div>
-            </div>
-            <div className="flex gap-3 mt-6">
-              <button
-                onClick={handlePost}
-                className="flex-1 py-2.5 bg-accent hover:bg-accent-hover text-white text-sm font-medium rounded-lg transition-colors"
-              >
-                Post Notice
-              </button>
-              <button
-                onClick={() => setShowModal(false)}
-                className="flex-1 py-2.5 bg-light-bg dark:bg-dark-bg border border-light-border dark:border-dark-border text-light-text-secondary dark:text-dark-text-secondary text-sm font-medium rounded-lg hover:bg-light-hover dark:hover:bg-dark-hover transition-colors"
-              >
-                Cancel
-              </button>
-            </div>
+        <CrudModal
+          title={selectedNotice ? "Edit Notice" : "Post New Notice"}
+          onClose={() => setShowModal(false)}
+          maxWidth="max-w-lg"
+          footer={
+            <>
+              <ModalButton onClick={() => setShowModal(false)}>Cancel</ModalButton>
+              <ModalButton variant="primary" onClick={handleSave}>
+                {selectedNotice ? "Save Changes" : "Post Notice"}
+              </ModalButton>
+            </>
+          }
+        >
+          <div className="flex flex-col gap-4">
+            <Field
+              label="Title"
+              value={form.title}
+              error={errors.title}
+              placeholder="Notice title"
+              onChange={(value) => setForm((prev) => ({ ...prev, title: value }))}
+            />
+            <TextAreaField
+              label="Content"
+              value={form.content}
+              error={errors.content}
+              placeholder="Write your notice here..."
+              onChange={(value) => setForm((prev) => ({ ...prev, content: value }))}
+            />
+            <SelectField
+              label="Target Audience"
+              value={form.target}
+              options={[
+                { value: "all", label: "Everyone" },
+                { value: "staff", label: "Staff only" },
+                { value: "student", label: "Students only" },
+              ]}
+              onChange={(value) => setForm((prev) => ({ ...prev, target: value }))}
+            />
           </div>
-        </div>
+        </CrudModal>
+      )}
+
+      {deleteNotice && (
+        <CrudModal
+          title="Delete Notice"
+          onClose={() => setDeleteNotice(null)}
+          footer={
+            <>
+              <ModalButton onClick={() => setDeleteNotice(null)}>Cancel</ModalButton>
+              <ModalButton variant="danger" onClick={handleDelete}>Delete</ModalButton>
+            </>
+          }
+        >
+          <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+            Delete notice{" "}
+            <span className="font-semibold text-light-text-primary dark:text-dark-text-primary">
+              {deleteNotice.title}
+            </span>
+            ?
+          </p>
+        </CrudModal>
       )}
     </div>
   );

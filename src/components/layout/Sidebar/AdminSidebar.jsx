@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { GraduationCap, X, LogOut } from "lucide-react";
 import {
   LayoutDashboard,
   Users,
+  Minus,
+  Plus,
   UserCheck,
   Building2,
   BookOpen,
@@ -24,8 +27,9 @@ import {
   Eye,
   Bus,
   Package,
+  Database,
 } from "lucide-react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import SidebarSection from "./SidebarSection";
 import { ROUTES } from "../../../constants/routes";
 import { useAuth } from "../../../hooks/useAuth";
@@ -73,12 +77,42 @@ function NavItem({
   );
 }
 
+function StudentSubItem({ to, label, collapsed, end = false }) {
+  if (collapsed) return null;
+
+  return (
+    <NavLink
+      to={to}
+      end={end}
+      className={({ isActive }) =>
+        `relative block py-1.5 pl-15 pr-3 text-sm transition-colors ${
+          isActive
+            ? "font-semibold text-accent"
+            : "text-light-text-secondary hover:text-light-text-primary dark:text-dark-text-secondary dark:hover:text-dark-text-primary"
+        }`
+      }
+    >
+      {({ isActive }) => (
+        <>
+          {isActive && (
+            <span className="absolute left-9 top-1/2 h-2.5 w-2.5 -translate-y-1/2 rounded-full bg-accent" />
+          )}
+          {label}
+        </>
+      )}
+    </NavLink>
+  );
+}
+
 function AdminSidebar({ isOpen, onClose, collapsed }) {
   const { signOut, user, role } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isStudentsRoute = location.pathname.startsWith("/admin/students");
+  const [studentsOpen, setStudentsOpen] = useState(isStudentsRoute);
 
-  const handleLogout = () => {
-    signOut();
+  const handleLogout = async () => {
+    await signOut();
     navigate(ROUTES.LOGIN, { replace: true });
   };
 
@@ -100,7 +134,7 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
         border-r border-light-border dark:border-dark-border
         transition-all duration-300 overflow-hidden
         ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
-        ${collapsed ? "lg:w-[60px] lg:min-w-[60px]" : "w-[220px] min-w-[220px]"}
+        ${collapsed ? "lg:w-15 lg:min-w-15" : "w-55 min-w-55"}
       `}
       >
         {/* Logo */}
@@ -148,14 +182,49 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
           />
 
           {!collapsed && <SidebarSection label="People" />}
-          <NavItem
-            to={ROUTES.ADMIN_STUDENTS}
-            icon={Users}
-            label="Students"
-            badge="1,248"
-            badgeColor="blue"
-            collapsed={collapsed}
-          />
+          <div>
+            <button
+              type="button"
+              onClick={() => {
+                if (collapsed) {
+                  navigate(ROUTES.ADMIN_STUDENTS);
+                  return;
+                }
+                setStudentsOpen((open) => !open);
+              }}
+              title={collapsed ? "Students" : undefined}
+              className={`mx-2 flex w-[calc(100%-1rem)] items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 ${
+                collapsed ? "justify-center" : ""
+              } ${
+                isStudentsRoute
+                  ? "bg-accent text-white font-medium"
+                  : "text-light-text-secondary hover:bg-light-hover dark:text-dark-text-secondary dark:hover:bg-dark-hover"
+              }`}
+            >
+              <Users size={17} className="shrink-0" />
+              {!collapsed && (
+                <>
+                  <span className="flex-1 truncate text-left">Students</span>
+                  {studentsOpen ? <Minus size={15} /> : <Plus size={15} />}
+                </>
+              )}
+            </button>
+
+            {!collapsed && studentsOpen && (
+              <div className="relative ml-2 mt-2 pb-2">
+                <span className="absolute left-9 top-0 h-full w-px bg-light-border dark:bg-dark-border" />
+                <StudentSubItem to={ROUTES.ADMIN_STUDENTS} label="All Students" collapsed={collapsed} end />
+                <StudentSubItem to={ROUTES.ADMIN_STUDENT_ADD} label="Add New" collapsed={collapsed} />
+                <StudentSubItem to={ROUTES.ADMIN_STUDENT_FAMILIES} label="Manage Families" collapsed={collapsed} />
+                <StudentSubItem to={ROUTES.ADMIN_STUDENT_ACTIVE_INACTIVE} label="Active / Inactive" collapsed={collapsed} />
+                <StudentSubItem to={ROUTES.ADMIN_STUDENT_ADMISSION_LETTERS} label="Admission Letter" collapsed={collapsed} />
+                <StudentSubItem to={ROUTES.ADMIN_STUDENT_ID_CARDS} label="Student ID Cards" collapsed={collapsed} />
+                <StudentSubItem to={ROUTES.ADMIN_STUDENT_PRINT_LIST} label="Print Basic List" collapsed={collapsed} />
+                <StudentSubItem to={ROUTES.ADMIN_STUDENT_LOGINS} label="Manage Login" collapsed={collapsed} />
+                <StudentSubItem to={ROUTES.ADMIN_STUDENT_PROMOTE} label="Promote Students" collapsed={collapsed} />
+              </div>
+            )}
+          </div>
           <NavItem
             to={ROUTES.ADMIN_TEACHERS}
             icon={UserCheck}
@@ -318,6 +387,12 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
           />
 
           {!collapsed && <SidebarSection label="System" />}
+          <NavItem
+            to="/admin/system"
+            icon={Database}
+            label="Backups & Logs"
+            collapsed={collapsed}
+          />
           <NavItem
             to={ROUTES.ADMIN_SETTINGS}
             icon={Settings}

@@ -5,6 +5,14 @@ import AdminLayout from "../components/layout/AdminLayout";
 import TeacherLayout from "../components/layout/TeacherLayout";
 import StudentLayout from "../components/layout/StudentLayout";
 import StudentList from "../pages/students/StudentList";
+import AddStudent from "../pages/students/AddStudent";
+import AddBulkStudents from "../pages/students/AddBulkStudents";
+import ManageFamilies from "../pages/students/ManageFamilies";
+import ActiveInactiveStudents from "../pages/students/ActiveInactiveStudents";
+import AdmissionLetters from "../pages/students/AdmissionLetters";
+import StudentIdCards from "../pages/students/StudentIdCards";
+import StudentLogins from "../pages/students/StudentLogins";
+import PromoteStudents from "../pages/students/PromoteStudents";
 import StudentAttendance from "../pages/attendance/StudentAttendence";
 import FeeManagement from "../pages/fees/FeeManagement";
 import AssignmentList from "../pages/assignments/AssignmentList";
@@ -24,6 +32,7 @@ import AlumniManagement from '../pages/alumni/AlumniManagement'
 import SportsActivities from '../pages/sports/SportsActivities'
 import StudyMaterials from '../pages/study-materials/StudyMaterials'
 import HomeworkDiary from '../pages/diary/HomeworkDiary'
+import TestList from '../pages/tests/TestList'
 import QuizList from '../pages/quiz/QuizList'
 import GradesResults from '../pages/grades/GradesResults'
 import Communications from '../pages/communications/Communications'
@@ -31,6 +40,7 @@ import TransportRoutes  from '../pages/transport/TransportRoutes'
 import Inventory from '../pages/inventory/Inventory'
 import ExpenseManagement from '../pages/expenses/ExpenseManagement'
 import Gamification from '../pages/gamification/Gamification'
+import SystemBackups from '../pages/system/SystemBackups';
 
 
 // Auth
@@ -63,6 +73,15 @@ function AppRouter() {
         >
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="students" element={<StudentList />} />
+          <Route path="students/add" element={<AddStudent />} />
+          <Route path="students/bulk" element={<AddBulkStudents />} />
+          <Route path="students/families" element={<ManageFamilies />} />
+          <Route path="students/active-inactive" element={<ActiveInactiveStudents />} />
+          <Route path="students/print-list" element={<StudentList />} />
+          <Route path="students/admission-letters" element={<AdmissionLetters />} />
+          <Route path="students/id-cards" element={<StudentIdCards />} />
+          <Route path="students/logins" element={<StudentLogins />} />
+          <Route path="students/promote" element={<PromoteStudents />} />
           <Route path="attendance" element={<StudentAttendance />} />
           <Route path="fees" element={<FeeManagement />} />
           <Route path="expenses" element={<ExpenseManagement />} />
@@ -83,12 +102,14 @@ function AppRouter() {
           <Route path="sports" element={<SportsActivities />} />
           <Route path="study-materials" element={<StudyMaterials />} />
           <Route path="diary" element={<HomeworkDiary />} />
+          <Route path="tests" element={<TestList />} />
           <Route path="quiz" element={<QuizList />} />
           <Route path="grades" element={<GradesResults />} />
           <Route path="communications" element={<Communications />} />
           <Route path="transport" element={<TransportRoutes />} />
           <Route path="inventory" element={<Inventory />} />
           <Route path="gamification" element={<Gamification />} />
+          <Route path="system" element={<SystemBackups />} />
         </Route>
 
         {/* Teacher */}

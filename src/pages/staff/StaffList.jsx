@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import {
   Search,
   Plus,
@@ -8,10 +8,18 @@ import {
   UserCheck,
   Mail,
   Phone,
+  AlertCircle,
 } from "lucide-react";
 import PageHeader from "../../components/common/PageHeader";
 import StatusPill from "../../components/common/StatusPill";
-import { mockTeachers } from "../../data/mockData";
+import { staffService } from "../../services/staffService";
+import {
+  CrudModal,
+  DetailGrid,
+  Field,
+  ModalButton,
+  SelectField,
+} from "../../components/common/CrudModal";
 
 const departments = [
   "All Departments",
@@ -26,13 +34,71 @@ const staffStatusStyles = {
   inactive: "bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-400",
 };
 
+const normalizeStaff = (payload) => {
+  const items = Array.isArray(payload)
+    ? payload
+    : payload?.data?.data ||
+      payload?.data?.users ||
+      payload?.data ||
+      payload?.users ||
+      [];
+
+  if (!Array.isArray(items)) return [];
+
+  return items.map((staff) => {
+    const profile = staff.profile || staff.staff_profile || {};
+    return {
+      id: staff.id,
+      name: staff.name || "",
+      empCode: profile.employee_code || profile.staff_code || String(staff.id || ""),
+      designation: profile.designation || "",
+      department: profile.department || "General",
+      email: staff.email || "",
+      phone: staff.phone || "",
+      status: staff.status || "active",
+      classes: staff.classes || profile.classes || [],
+    };
+  });
+};
+
 function StaffList() {
+  const [staffList, setStaffList] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedDept, setDept] = useState("All Departments");
   const [selectedStatus, setStatus] = useState("All");
+  const [error, setError] = useState("");
+  const [modalMode, setModalMode] = useState(null);
+  const [selectedStaff, setSelectedStaff] = useState(null);
+  const [form, setForm] = useState({
+    name: "",
+    empCode: "",
+    designation: "",
+    department: "Mathematics",
+    email: "",
+    phone: "",
+    status: "active",
+    classes: "",
+  });
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    const loadStaff = async () => {
+      setError("");
+
+      try {
+        const response = await staffService.getAll();
+        setStaffList(normalizeStaff(response.data));
+      } catch (err) {
+        setStaffList([]);
+        setError(err.response?.data?.message || "Could not load staff from the backend.");
+      }
+    };
+
+    loadStaff();
+  }, []);
 
   const filtered = useMemo(() => {
-    return mockTeachers.filter((t) => {
+    return staffList.filter((t) => {
       const matchSearch =
         t.name.toLowerCase().includes(search.toLowerCase()) ||
         t.empCode.toLowerCase().includes(search.toLowerCase());
@@ -42,17 +108,101 @@ function StaffList() {
         selectedStatus === "All" || t.status === selectedStatus;
       return matchSearch && matchDept && matchStatus;
     });
-  }, [search, selectedDept, selectedStatus]);
+  }, [staffList, search, selectedDept, selectedStatus]);
 
   const summary = useMemo(
     () => ({
-      total: mockTeachers.length,
-      active: mockTeachers.filter((t) => t.status === "active").length,
-      inactive: mockTeachers.filter((t) => t.status === "inactive").length,
-      depts: [...new Set(mockTeachers.map((t) => t.department))].length,
+      total: staffList.length,
+      active: staffList.filter((t) => t.status === "active").length,
+      inactive: staffList.filter((t) => t.status === "inactive").length,
+      depts: [...new Set(staffList.map((t) => t.department))].length,
     }),
-    [],
+    [staffList],
   );
+
+  const openAddModal = () => {
+    setSelectedStaff(null);
+    setErrors({});
+    setForm({
+      name: "",
+      empCode: "",
+      designation: "",
+      department: "Mathematics",
+      email: "",
+      phone: "",
+      status: "active",
+      classes: "",
+    });
+    setModalMode("form");
+  };
+
+  const openEditModal = (staff) => {
+    setSelectedStaff(staff);
+    setErrors({});
+    setForm({
+      ...staff,
+      classes: staff.classes.join(", "),
+    });
+    setModalMode("form");
+  };
+
+  const validate = () => {
+    const nextErrors = {};
+    if (!form.name.trim()) nextErrors.name = "Name is required";
+    if (!form.email.trim()) nextErrors.email = "Email is required";
+    if (form.email && !/^\S+@\S+\.\S+$/.test(form.email)) {
+      nextErrors.email = "Enter a valid email";
+    }
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  };
+
+  const handleSave = async () => {
+    if (!validate()) return;
+    const payload = {
+      ...form,
+      name: form.name.trim(),
+      empCode: form.empCode.trim(),
+      designation: form.designation.trim(),
+      email: form.email.trim(),
+      phone: form.phone.trim(),
+      classes: form.classes
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean),
+    };
+
+    try {
+      if (selectedStaff) {
+        await staffService.update(selectedStaff.id, payload);
+        setStaffList((prev) =>
+          prev.map((staff) =>
+            staff.id === selectedStaff.id ? { ...staff, ...payload } : staff,
+          ),
+        );
+      } else {
+        const response = await staffService.create(payload);
+        const createdStaff =
+          normalizeStaff(response.data).at(0) ||
+          normalizeStaff(response.data?.data).at(0) ||
+          { ...payload, id: response.data?.data?.id || Date.now() };
+        setStaffList((prev) => [createdStaff, ...prev]);
+      }
+      setModalMode(null);
+    } catch (err) {
+      setError(err.response?.data?.message || "Could not save staff.");
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await staffService.delete(selectedStaff.id);
+      setStaffList((prev) => prev.filter((staff) => staff.id !== selectedStaff.id));
+      setModalMode(null);
+    } catch (err) {
+      setError(err.response?.data?.message || "Could not delete staff.");
+    }
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -61,12 +211,22 @@ function StaffList() {
         title="Staff Management"
         subtitle="Manage all teachers and staff members"
         action={
-          <button className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover text-white text-sm font-medium rounded-lg transition-colors">
+          <button
+            onClick={openAddModal}
+            className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover text-white text-sm font-medium rounded-lg transition-colors"
+          >
             <Plus size={16} />
             Add Staff
           </button>
         }
       />
+
+      {error && (
+        <div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800 dark:border-amber-900 dark:bg-amber-950 dark:text-amber-300">
+          <AlertCircle size={17} className="mt-0.5 shrink-0" />
+          <span>{error}</span>
+        </div>
+      )}
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -222,15 +382,30 @@ function StaffList() {
 
               {/* Actions */}
               <div className="flex items-center gap-2 pt-3 border-t border-light-border dark:border-dark-border">
-                <button className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary hover:bg-blue-50 dark:hover:bg-blue-950 hover:text-blue-600 transition-colors">
+                <button
+                  onClick={() => {
+                    setSelectedStaff(staff);
+                    setModalMode("view");
+                  }}
+                  className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary hover:bg-blue-50 dark:hover:bg-blue-950 hover:text-blue-600 transition-colors"
+                >
                   <Eye size={13} />
                   View
                 </button>
-                <button className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary hover:bg-amber-50 dark:hover:bg-amber-950 hover:text-amber-600 transition-colors">
+                <button
+                  onClick={() => openEditModal(staff)}
+                  className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary hover:bg-amber-50 dark:hover:bg-amber-950 hover:text-amber-600 transition-colors"
+                >
                   <Pencil size={13} />
                   Edit
                 </button>
-                <button className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary hover:bg-red-50 dark:hover:bg-red-950 hover:text-red-600 transition-colors">
+                <button
+                  onClick={() => {
+                    setSelectedStaff(staff);
+                    setModalMode("delete");
+                  }}
+                  className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-xs font-medium text-light-text-secondary dark:text-dark-text-secondary hover:bg-red-50 dark:hover:bg-red-950 hover:text-red-600 transition-colors"
+                >
                   <Trash2 size={13} />
                   Delete
                 </button>
@@ -253,6 +428,70 @@ function StaffList() {
             Try adjusting your search or filters
           </p>
         </div>
+      )}
+
+      {modalMode === "form" && (
+        <CrudModal
+          title={selectedStaff ? "Edit Staff" : "Add Staff"}
+          onClose={() => setModalMode(null)}
+          footer={
+            <>
+              <ModalButton onClick={() => setModalMode(null)}>Cancel</ModalButton>
+              <ModalButton variant="primary" onClick={handleSave}>
+                {selectedStaff ? "Save Changes" : "Add Staff"}
+              </ModalButton>
+            </>
+          }
+        >
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Field label="Name" value={form.name} error={errors.name} onChange={(value) => setForm((prev) => ({ ...prev, name: value }))} />
+            <Field label="Employee Code" value={form.empCode} error={errors.empCode} onChange={(value) => setForm((prev) => ({ ...prev, empCode: value }))} />
+            <Field label="Designation" value={form.designation} error={errors.designation} onChange={(value) => setForm((prev) => ({ ...prev, designation: value }))} />
+            <SelectField label="Department" value={form.department} options={departments.slice(1)} onChange={(value) => setForm((prev) => ({ ...prev, department: value }))} />
+            <Field label="Email" type="email" value={form.email} error={errors.email} onChange={(value) => setForm((prev) => ({ ...prev, email: value }))} />
+            <Field label="Phone" value={form.phone} error={errors.phone} onChange={(value) => setForm((prev) => ({ ...prev, phone: value }))} />
+            <SelectField label="Status" value={form.status} options={["active", "inactive"]} onChange={(value) => setForm((prev) => ({ ...prev, status: value }))} />
+            <Field label="Classes" value={form.classes} placeholder="10-A, 9-B" onChange={(value) => setForm((prev) => ({ ...prev, classes: value }))} />
+          </div>
+        </CrudModal>
+      )}
+
+      {modalMode === "view" && selectedStaff && (
+        <CrudModal title="Staff Details" onClose={() => setModalMode(null)}>
+          <DetailGrid
+            items={[
+              ["Name", selectedStaff.name],
+              ["Employee Code", selectedStaff.empCode],
+              ["Designation", selectedStaff.designation],
+              ["Department", selectedStaff.department],
+              ["Email", selectedStaff.email],
+              ["Phone", selectedStaff.phone],
+              ["Status", selectedStaff.status],
+              ["Classes", selectedStaff.classes.join(", ")],
+            ]}
+          />
+        </CrudModal>
+      )}
+
+      {modalMode === "delete" && selectedStaff && (
+        <CrudModal
+          title="Delete Staff"
+          onClose={() => setModalMode(null)}
+          footer={
+            <>
+              <ModalButton onClick={() => setModalMode(null)}>Cancel</ModalButton>
+              <ModalButton variant="danger" onClick={handleDelete}>Delete</ModalButton>
+            </>
+          }
+        >
+          <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+            Are you sure you want to delete{" "}
+            <span className="font-semibold text-light-text-primary dark:text-dark-text-primary">
+              {selectedStaff.name}
+            </span>
+            ?
+          </p>
+        </CrudModal>
       )}
     </div>
   );

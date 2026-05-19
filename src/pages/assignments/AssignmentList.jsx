@@ -10,6 +10,13 @@ import {
 import PageHeader from "../../components/common/PageHeader";
 import StatusPill from "../../components/common/StatusPill";
 import { mockAssignments, assignmentStatusStyles } from "../../data/mockData";
+import {
+  CrudModal,
+  DetailGrid,
+  Field,
+  ModalButton,
+  SelectField,
+} from "../../components/common/CrudModal";
 
 const subjects = [
   "All Subjects",
@@ -22,14 +29,29 @@ const subjects = [
 const statuses = ["All", "open", "grading", "overdue", "closed"];
 
 function AssignmentList() {
+  const [assignments, setAssignments] = useState(mockAssignments);
   const [search, setSearch] = useState("");
   const [selectedSubject, setSubject] = useState("All Subjects");
   const [selectedStatus, setStatus] = useState("All");
   const [expandedId, setExpanded] = useState(null);
+  const [modalMode, setModalMode] = useState(null);
+  const [selectedAssignment, setSelectedAssignment] = useState(null);
+  const [form, setForm] = useState({
+    title: "",
+    subject: "Mathematics",
+    class: "",
+    teacher: "",
+    deadline: "",
+    totalMarks: "",
+    submitted: "0",
+    total: "",
+    status: "open",
+  });
+  const [errors, setErrors] = useState({});
 
   // ── Filtered assignments ──
   const filtered = useMemo(() => {
-    return mockAssignments.filter((a) => {
+    return assignments.filter((a) => {
       const matchSearch =
         a.title.toLowerCase().includes(search.toLowerCase()) ||
         a.class.toLowerCase().includes(search.toLowerCase());
@@ -39,18 +61,89 @@ function AssignmentList() {
         selectedStatus === "All" || a.status === selectedStatus;
       return matchSearch && matchSubject && matchStatus;
     });
-  }, [search, selectedSubject, selectedStatus]);
+  }, [assignments, search, selectedSubject, selectedStatus]);
 
   // ── Summary ──
   const summary = useMemo(
     () => ({
-      total: mockAssignments.length,
-      open: mockAssignments.filter((a) => a.status === "open").length,
-      grading: mockAssignments.filter((a) => a.status === "grading").length,
-      overdue: mockAssignments.filter((a) => a.status === "overdue").length,
+      total: assignments.length,
+      open: assignments.filter((a) => a.status === "open").length,
+      grading: assignments.filter((a) => a.status === "grading").length,
+      overdue: assignments.filter((a) => a.status === "overdue").length,
     }),
-    [],
+    [assignments],
   );
+
+  const openForm = (assignment = null) => {
+    setSelectedAssignment(assignment);
+    setErrors({});
+    setForm(
+      assignment
+        ? {
+            ...assignment,
+            totalMarks: String(assignment.totalMarks),
+            submitted: String(assignment.submitted),
+            total: String(assignment.total),
+          }
+        : {
+            title: "",
+            subject: "Mathematics",
+            class: "",
+            teacher: "",
+            deadline: "",
+            totalMarks: "",
+            submitted: "0",
+            total: "",
+            status: "open",
+          },
+    );
+    setModalMode("form");
+  };
+
+  const validate = () => {
+    const nextErrors = {};
+    if (!form.title.trim()) nextErrors.title = "Title is required";
+    if (!form.class.trim()) nextErrors.class = "Class is required";
+    if (!form.teacher.trim()) nextErrors.teacher = "Teacher is required";
+    if (!form.deadline.trim()) nextErrors.deadline = "Deadline is required";
+    if (!form.totalMarks || Number(form.totalMarks) < 1) nextErrors.totalMarks = "Marks are required";
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  };
+
+  const handleSave = () => {
+    if (!validate()) return;
+    const payload = {
+      ...form,
+      title: form.title.trim(),
+      class: form.class.trim(),
+      teacher: form.teacher.trim(),
+      totalMarks: Number(form.totalMarks),
+      submitted: Number(form.submitted) || 0,
+      total: Number(form.total) || 0,
+    };
+
+    if (selectedAssignment) {
+      setAssignments((prev) =>
+        prev.map((assignment) =>
+          assignment.id === selectedAssignment.id
+            ? { ...assignment, ...payload }
+            : assignment,
+        ),
+      );
+    } else {
+      setAssignments((prev) => [{ ...payload, id: Date.now() }, ...prev]);
+    }
+    setModalMode(null);
+  };
+
+  const handleDelete = () => {
+    setAssignments((prev) =>
+      prev.filter((assignment) => assignment.id !== selectedAssignment.id),
+    );
+    setExpanded((id) => (id === selectedAssignment.id ? null : id));
+    setModalMode(null);
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -59,7 +152,10 @@ function AssignmentList() {
         title="Assignments"
         subtitle="Manage and track all assignments"
         action={
-          <button className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover text-white text-sm font-medium rounded-lg transition-colors">
+          <button
+            onClick={() => openForm()}
+            className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover text-white text-sm font-medium rounded-lg transition-colors"
+          >
             <Plus size={16} />
             New Assignment
           </button>
@@ -274,13 +370,28 @@ function AssignmentList() {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <button className="px-3 py-1.5 bg-accent hover:bg-accent-hover text-white text-xs font-medium rounded-lg transition-colors">
+                    <button
+                      onClick={() => {
+                        setSelectedAssignment(assignment);
+                        setModalMode("view");
+                      }}
+                      className="px-3 py-1.5 bg-accent hover:bg-accent-hover text-white text-xs font-medium rounded-lg transition-colors"
+                    >
                       View Submissions
                     </button>
-                    <button className="px-3 py-1.5 bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border text-light-text-secondary dark:text-dark-text-secondary text-xs font-medium rounded-lg hover:bg-light-hover dark:hover:bg-dark-hover transition-colors">
+                    <button
+                      onClick={() => openForm(assignment)}
+                      className="px-3 py-1.5 bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border text-light-text-secondary dark:text-dark-text-secondary text-xs font-medium rounded-lg hover:bg-light-hover dark:hover:bg-dark-hover transition-colors"
+                    >
                       Edit Assignment
                     </button>
-                    <button className="px-3 py-1.5 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-xs font-medium rounded-lg hover:bg-red-100 transition-colors">
+                    <button
+                      onClick={() => {
+                        setSelectedAssignment(assignment);
+                        setModalMode("delete");
+                      }}
+                      className="px-3 py-1.5 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-xs font-medium rounded-lg hover:bg-red-100 transition-colors"
+                    >
                       Delete
                     </button>
                   </div>
@@ -305,6 +416,71 @@ function AssignmentList() {
           </div>
         )}
       </div>
+
+      {modalMode === "form" && (
+        <CrudModal
+          title={selectedAssignment ? "Edit Assignment" : "New Assignment"}
+          onClose={() => setModalMode(null)}
+          footer={
+            <>
+              <ModalButton onClick={() => setModalMode(null)}>Cancel</ModalButton>
+              <ModalButton variant="primary" onClick={handleSave}>
+                {selectedAssignment ? "Save Changes" : "Create Assignment"}
+              </ModalButton>
+            </>
+          }
+        >
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Field label="Title" value={form.title} error={errors.title} onChange={(value) => setForm((prev) => ({ ...prev, title: value }))} />
+            <SelectField label="Subject" value={form.subject} options={subjects.slice(1)} onChange={(value) => setForm((prev) => ({ ...prev, subject: value }))} />
+            <Field label="Class" value={form.class} error={errors.class} placeholder="10-A" onChange={(value) => setForm((prev) => ({ ...prev, class: value }))} />
+            <Field label="Teacher" value={form.teacher} error={errors.teacher} onChange={(value) => setForm((prev) => ({ ...prev, teacher: value }))} />
+            <Field label="Deadline" type="date" value={form.deadline} error={errors.deadline} onChange={(value) => setForm((prev) => ({ ...prev, deadline: value }))} />
+            <Field label="Total Marks" type="number" value={form.totalMarks} error={errors.totalMarks} onChange={(value) => setForm((prev) => ({ ...prev, totalMarks: value }))} />
+            <Field label="Submitted" type="number" value={form.submitted} onChange={(value) => setForm((prev) => ({ ...prev, submitted: value }))} />
+            <Field label="Total Students" type="number" value={form.total} onChange={(value) => setForm((prev) => ({ ...prev, total: value }))} />
+            <SelectField label="Status" value={form.status} options={statuses.slice(1)} onChange={(value) => setForm((prev) => ({ ...prev, status: value }))} />
+          </div>
+        </CrudModal>
+      )}
+
+      {modalMode === "view" && selectedAssignment && (
+        <CrudModal title="Assignment Details" onClose={() => setModalMode(null)}>
+          <DetailGrid
+            items={[
+              ["Title", selectedAssignment.title],
+              ["Subject", selectedAssignment.subject],
+              ["Class", selectedAssignment.class],
+              ["Teacher", selectedAssignment.teacher],
+              ["Deadline", selectedAssignment.deadline],
+              ["Marks", selectedAssignment.totalMarks],
+              ["Submissions", `${selectedAssignment.submitted}/${selectedAssignment.total}`],
+              ["Status", selectedAssignment.status],
+            ]}
+          />
+        </CrudModal>
+      )}
+
+      {modalMode === "delete" && selectedAssignment && (
+        <CrudModal
+          title="Delete Assignment"
+          onClose={() => setModalMode(null)}
+          footer={
+            <>
+              <ModalButton onClick={() => setModalMode(null)}>Cancel</ModalButton>
+              <ModalButton variant="danger" onClick={handleDelete}>Delete</ModalButton>
+            </>
+          }
+        >
+          <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+            Delete assignment{" "}
+            <span className="font-semibold text-light-text-primary dark:text-dark-text-primary">
+              {selectedAssignment.title}
+            </span>
+            ?
+          </p>
+        </CrudModal>
+      )}
     </div>
   );
 }

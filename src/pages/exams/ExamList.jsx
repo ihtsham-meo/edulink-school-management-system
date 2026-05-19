@@ -1,8 +1,15 @@
 import { useState, useMemo } from "react";
-import { Search, Plus, BookOpen, Clock, MapPin, Users } from "lucide-react";
+import { Search, Plus, BookOpen, Clock, MapPin } from "lucide-react";
 import PageHeader from "../../components/common/PageHeader";
 import StatusPill from "../../components/common/StatusPill";
 import { mockExams } from "../../data/mockData";
+import {
+  CrudModal,
+  DetailGrid,
+  Field,
+  ModalButton,
+  SelectField,
+} from "../../components/common/CrudModal";
 
 const examStatusStyles = {
   upcoming: "bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-400",
@@ -14,12 +21,24 @@ const examStatusStyles = {
 const filters = ["All", "upcoming", "ongoing", "completed"];
 
 function ExamList() {
+  const [exams, setExams] = useState(mockExams);
   const [search, setSearch] = useState("");
   const [selectedStatus, setStatus] = useState("All");
   const [expandedId, setExpanded] = useState(null);
+  const [modalMode, setModalMode] = useState(null);
+  const [selectedExam, setSelectedExam] = useState(null);
+  const [form, setForm] = useState({
+    subject: "",
+    class: "",
+    date: "",
+    time: "",
+    room: "",
+    status: "upcoming",
+  });
+  const [errors, setErrors] = useState({});
 
   const filtered = useMemo(() => {
-    return mockExams.filter((e) => {
+    return exams.filter((e) => {
       const matchSearch =
         e.subject.toLowerCase().includes(search.toLowerCase()) ||
         e.class.toLowerCase().includes(search.toLowerCase());
@@ -27,17 +46,72 @@ function ExamList() {
         selectedStatus === "All" || e.status === selectedStatus;
       return matchSearch && matchStatus;
     });
-  }, [search, selectedStatus]);
+  }, [exams, search, selectedStatus]);
 
   const summary = useMemo(
     () => ({
-      total: mockExams.length,
-      upcoming: mockExams.filter((e) => e.status === "upcoming").length,
-      ongoing: mockExams.filter((e) => e.status === "ongoing").length,
-      completed: mockExams.filter((e) => e.status === "completed").length,
+      total: exams.length,
+      upcoming: exams.filter((e) => e.status === "upcoming").length,
+      ongoing: exams.filter((e) => e.status === "ongoing").length,
+      completed: exams.filter((e) => e.status === "completed").length,
     }),
-    [],
+    [exams],
   );
+
+  const openForm = (exam = null) => {
+    setSelectedExam(exam);
+    setErrors({});
+    setForm(
+      exam || {
+        subject: "",
+        class: "",
+        date: "",
+        time: "",
+        room: "",
+        status: "upcoming",
+      },
+    );
+    setModalMode("form");
+  };
+
+  const validate = () => {
+    const nextErrors = {};
+    if (!form.subject.trim()) nextErrors.subject = "Subject is required";
+    if (!form.class.trim()) nextErrors.class = "Class is required";
+    if (!form.date) nextErrors.date = "Date is required";
+    if (!form.time.trim()) nextErrors.time = "Time is required";
+    if (!form.room.trim()) nextErrors.room = "Room is required";
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  };
+
+  const handleSave = () => {
+    if (!validate()) return;
+    const payload = {
+      ...form,
+      subject: form.subject.trim(),
+      class: form.class.trim(),
+      time: form.time.trim(),
+      room: form.room.trim(),
+    };
+
+    if (selectedExam) {
+      setExams((prev) =>
+        prev.map((exam) =>
+          exam.id === selectedExam.id ? { ...exam, ...payload } : exam,
+        ),
+      );
+    } else {
+      setExams((prev) => [{ ...payload, id: Date.now() }, ...prev]);
+    }
+    setModalMode(null);
+  };
+
+  const handleDelete = () => {
+    setExams((prev) => prev.filter((exam) => exam.id !== selectedExam.id));
+    setExpanded((id) => (id === selectedExam.id ? null : id));
+    setModalMode(null);
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -46,7 +120,10 @@ function ExamList() {
         title="Exam Management"
         subtitle="Schedule and manage all exams"
         action={
-          <button className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover text-white text-sm font-medium rounded-lg transition-colors">
+          <button
+            onClick={() => openForm()}
+            className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent-hover text-white text-sm font-medium rounded-lg transition-colors"
+          >
             <Plus size={16} />
             Schedule Exam
           </button>
@@ -216,13 +293,28 @@ function ExamList() {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <button className="px-3 py-1.5 bg-accent hover:bg-accent-hover text-white text-xs font-medium rounded-lg transition-colors">
+                    <button
+                      onClick={() => {
+                        setSelectedExam(exam);
+                        setModalMode("view");
+                      }}
+                      className="px-3 py-1.5 bg-accent hover:bg-accent-hover text-white text-xs font-medium rounded-lg transition-colors"
+                    >
                       View Results
                     </button>
-                    <button className="px-3 py-1.5 bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border text-light-text-secondary dark:text-dark-text-secondary text-xs font-medium rounded-lg hover:bg-light-hover dark:hover:bg-dark-hover transition-colors">
+                    <button
+                      onClick={() => openForm(exam)}
+                      className="px-3 py-1.5 bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border text-light-text-secondary dark:text-dark-text-secondary text-xs font-medium rounded-lg hover:bg-light-hover dark:hover:bg-dark-hover transition-colors"
+                    >
                       Edit Exam
                     </button>
-                    <button className="px-3 py-1.5 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-xs font-medium rounded-lg transition-colors">
+                    <button
+                      onClick={() => {
+                        setSelectedExam(exam);
+                        setModalMode("delete");
+                      }}
+                      className="px-3 py-1.5 bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-xs font-medium rounded-lg transition-colors"
+                    >
                       Cancel Exam
                     </button>
                   </div>
@@ -247,6 +339,66 @@ function ExamList() {
           </div>
         )}
       </div>
+
+      {modalMode === "form" && (
+        <CrudModal
+          title={selectedExam ? "Edit Exam" : "Schedule Exam"}
+          onClose={() => setModalMode(null)}
+          footer={
+            <>
+              <ModalButton onClick={() => setModalMode(null)}>Cancel</ModalButton>
+              <ModalButton variant="primary" onClick={handleSave}>
+                {selectedExam ? "Save Changes" : "Schedule Exam"}
+              </ModalButton>
+            </>
+          }
+        >
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Field label="Subject" value={form.subject} error={errors.subject} onChange={(value) => setForm((prev) => ({ ...prev, subject: value }))} />
+            <Field label="Class" value={form.class} error={errors.class} placeholder="10-A" onChange={(value) => setForm((prev) => ({ ...prev, class: value }))} />
+            <Field label="Date" type="date" value={form.date} error={errors.date} onChange={(value) => setForm((prev) => ({ ...prev, date: value }))} />
+            <Field label="Time" value={form.time} error={errors.time} placeholder="09:00 AM" onChange={(value) => setForm((prev) => ({ ...prev, time: value }))} />
+            <Field label="Room" value={form.room} error={errors.room} onChange={(value) => setForm((prev) => ({ ...prev, room: value }))} />
+            <SelectField label="Status" value={form.status} options={["upcoming", "ongoing", "completed", "cancelled"]} onChange={(value) => setForm((prev) => ({ ...prev, status: value }))} />
+          </div>
+        </CrudModal>
+      )}
+
+      {modalMode === "view" && selectedExam && (
+        <CrudModal title="Exam Details" onClose={() => setModalMode(null)}>
+          <DetailGrid
+            items={[
+              ["Subject", selectedExam.subject],
+              ["Class", selectedExam.class],
+              ["Date", selectedExam.date],
+              ["Time", selectedExam.time],
+              ["Room", selectedExam.room],
+              ["Status", selectedExam.status],
+            ]}
+          />
+        </CrudModal>
+      )}
+
+      {modalMode === "delete" && selectedExam && (
+        <CrudModal
+          title="Cancel Exam"
+          onClose={() => setModalMode(null)}
+          footer={
+            <>
+              <ModalButton onClick={() => setModalMode(null)}>Keep Exam</ModalButton>
+              <ModalButton variant="danger" onClick={handleDelete}>Cancel Exam</ModalButton>
+            </>
+          }
+        >
+          <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">
+            Cancel{" "}
+            <span className="font-semibold text-light-text-primary dark:text-dark-text-primary">
+              {selectedExam.subject}
+            </span>
+            ?
+          </p>
+        </CrudModal>
+      )}
     </div>
   );
 }

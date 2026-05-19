@@ -2223,6 +2223,23 @@ export const mockQuizResults = [
   { id: 5, quizId: 4, studentName: 'Ayesha Mir',   score: 12, total: 12, percentage: 100},
 ]
 
+// ── TESTS ──
+export const mockTests = [
+  { id: 1, title: 'Algebra Unit Test', subject: 'Mathematics', class: '9-A', section: 'A', type: 'written', maxMarks: 50, duration: '60 min', date: '2026-05-18', teacher: 'Ms. Fatima', status: 'scheduled' },
+  { id: 2, title: 'Grammar Test', subject: 'English', class: '10-B', section: 'B', type: 'written', maxMarks: 30, duration: '45 min', date: '2026-05-17', teacher: 'Mr. Kamran', status: 'active' },
+  { id: 3, title: 'Motion Short Test', subject: 'Physics', class: '11-A', section: 'A', type: 'practical', maxMarks: 25, duration: '40 min', date: '2026-05-13', teacher: 'Ms. Sana', status: 'checked' },
+  { id: 4, title: 'Programming Basics', subject: 'Computer', class: '9-A', section: 'A', type: 'lab', maxMarks: 40, duration: '60 min', date: '2026-05-12', teacher: 'Mr. Hamza', status: 'checked' },
+  { id: 5, title: 'Chemistry Oral Test', subject: 'Chemistry', class: '8-C', section: 'C', type: 'oral', maxMarks: 20, duration: '30 min', date: '2026-05-20', teacher: 'Ms. Ayesha', status: 'draft' },
+]
+
+export const mockTestResults = [
+  { id: 1, testId: 3, studentName: 'Ali Hassan', marks: 22, total: 25, percentage: 88, grade: 'A' },
+  { id: 2, testId: 3, studentName: 'Sara Khan', marks: 18, total: 25, percentage: 72, grade: 'B' },
+  { id: 3, testId: 3, studentName: 'Usman Raza', marks: 11, total: 25, percentage: 44, grade: 'D' },
+  { id: 4, testId: 4, studentName: 'Ali Hassan', marks: 34, total: 40, percentage: 85, grade: 'A' },
+  { id: 5, testId: 4, studentName: 'Ayesha Mir', marks: 38, total: 40, percentage: 95, grade: 'A+' },
+]
+
 // ── GRADES & RESULTS ──
 export const mockGradeRules = [
   { id: 1, grade: 'A+', from: 90, to: 100, remarks: 'Outstanding'  },
@@ -2309,6 +2326,37 @@ export const mockBadges = [
   { id: 3, name: 'Assignment Star',    description: 'Submit all assignments on time',          icon: '📝', color: 'bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-400',     earned: 4  },
   { id: 4, name: 'Quiz Champion',      description: 'Score 100% in any quiz',                 icon: '🎯', color: 'bg-purple-50 dark:bg-purple-950 text-purple-700 dark:text-purple-400', earned: 2 },
   { id: 5, name: 'Behavior Star',      description: 'Receive 5 positive behavior tags',       icon: '😊', color: 'bg-pink-50 dark:bg-pink-950 text-pink-700 dark:text-pink-400',     earned: 2  },
+]
+
+// ── SYSTEM ──
+export const mockBackups = [
+  { id: 1, filename: 'backup_2026_05_14.sql', size: '24.5 MB', createdAt: '2026-05-14 02:00', status: 'success' },
+  { id: 2, filename: 'backup_2026_05_13.sql', size: '24.3 MB', createdAt: '2026-05-13 02:00', status: 'success' },
+  { id: 3, filename: 'backup_2026_05_12.sql', size: '24.1 MB', createdAt: '2026-05-12 02:00', status: 'success' },
+  { id: 4, filename: 'backup_2026_05_11.sql', size: '23.9 MB', createdAt: '2026-05-11 02:00', status: 'failed'  },
+  { id: 5, filename: 'backup_2026_05_10.sql', size: '23.8 MB', createdAt: '2026-05-10 02:00', status: 'success' },
+]
+
+export const mockAuditLogs = [
+  { id: 1, user: 'Super Admin', module: 'Students',    action: 'create', record: 'Ali Hassan (ST001)',      oldValue: null,         newValue: 'Created',     ip: '192.168.1.1', createdAt: '2026-05-14 09:15' },
+  { id: 2, user: 'Super Admin', module: 'Fee',         action: 'update', record: 'Invoice #1045',           oldValue: 'Pending',    newValue: 'Paid',        ip: '192.168.1.1', createdAt: '2026-05-14 10:30' },
+  { id: 3, user: 'Ms. Fatima',  module: 'Attendance',  action: 'update', record: 'Class 9-A — 2026-05-14',  oldValue: 'Not marked', newValue: 'Marked',      ip: '192.168.1.2', createdAt: '2026-05-14 08:45' },
+  { id: 4, user: 'Super Admin', module: 'Staff',       action: 'delete', record: 'Mr. Asad Khan (EMP006)', oldValue: 'Active',     newValue: 'Deleted',     ip: '192.168.1.1', createdAt: '2026-05-13 14:00' },
+  { id: 5, user: 'Super Admin', module: 'Settings',    action: 'update', record: 'General Settings',        oldValue: 'School',     newValue: 'College',     ip: '192.168.1.1', createdAt: '2026-05-13 11:00' },
+  { id: 6, user: 'Mr. Kamran',  module: 'Assignments', action: 'create', record: 'Essay — My Hometown',     oldValue: null,         newValue: 'Created',     ip: '192.168.1.3', createdAt: '2026-05-12 09:00' },
+]
+
+export const mockLoginLogs = [
+  { id: 1, name: 'Super Admin', role: 'admin',   ip: '192.168.1.1', device: 'Chrome / Windows', lastActive: '2026-05-14 10:30', status: 'success' },
+  { id: 2, name: 'Ms. Fatima',  role: 'teacher', ip: '192.168.1.2', device: 'Safari / iPhone',  lastActive: '2026-05-14 08:45', status: 'success' },
+  { id: 3, name: 'Mr. Kamran',  role: 'teacher', ip: '192.168.1.3', device: 'Chrome / Android', lastActive: '2026-05-12 09:00', status: 'success' },
+  { id: 4, name: 'Unknown',     role: 'unknown', ip: '203.45.67.89', device: 'Unknown',          lastActive: '2026-05-11 23:00', status: 'failed'  },
+]
+
+export const mockRecycleBin = [
+  { id: 1, type: 'Student',  name: 'Zain Akhtar (ST007)',       deletedBy: 'Super Admin', deletedAt: '2026-05-13 14:30' },
+  { id: 2, type: 'Invoice',  name: 'Invoice #1032 — Rs 4,500',  deletedBy: 'Super Admin', deletedAt: '2026-05-12 10:00' },
+  { id: 3, type: 'Notice',   name: 'Holiday Notice — April',    deletedBy: 'Super Admin', deletedAt: '2026-05-10 09:00' },
 ]
 
 export const attendanceStatusStyles = {
