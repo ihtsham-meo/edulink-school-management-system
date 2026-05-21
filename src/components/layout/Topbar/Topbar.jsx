@@ -17,8 +17,10 @@ function Topbar({ onMenuClick }) {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
-    hour12: false,
-  });
+    hour12: true,
+  }).replace(/\s?[AP]M$/, '');
+
+  
 
   const formattedDate = time.toLocaleDateString("en-US", {
     weekday: "short",

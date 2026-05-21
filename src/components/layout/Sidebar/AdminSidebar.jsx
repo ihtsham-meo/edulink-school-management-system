@@ -27,6 +27,11 @@ import {
   Eye,
   Bus,
   Package,
+  CreditCard,
+  Award,
+  Video,
+  BookCopy,
+  Globe,
   Database,
 } from "lucide-react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
@@ -55,8 +60,8 @@ function NavItem({
           collapsed ? "justify-center" : ""
         } ${
           isActive
-            ? "bg-accent text-white font-medium"
-            : "text-light-text-secondary dark:text-dark-text-secondary hover:bg-light-hover dark:hover:bg-dark-hover"
+            ? "bg-gray-500 text-white font-medium"
+            : "text-light-text-secondary dark:text-dark-text-secondary hover:bg-light-hover dark:hover:bg-dark-hover "
         }`
       }
     >
@@ -213,15 +218,52 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
             {!collapsed && studentsOpen && (
               <div className="relative ml-2 mt-2 pb-2">
                 <span className="absolute left-9 top-0 h-full w-px bg-light-border dark:bg-dark-border" />
-                <StudentSubItem to={ROUTES.ADMIN_STUDENTS} label="All Students" collapsed={collapsed} end />
-                <StudentSubItem to={ROUTES.ADMIN_STUDENT_ADD} label="Add New" collapsed={collapsed} />
-                <StudentSubItem to={ROUTES.ADMIN_STUDENT_FAMILIES} label="Manage Families" collapsed={collapsed} />
-                <StudentSubItem to={ROUTES.ADMIN_STUDENT_ACTIVE_INACTIVE} label="Active / Inactive" collapsed={collapsed} />
-                <StudentSubItem to={ROUTES.ADMIN_STUDENT_ADMISSION_LETTERS} label="Admission Letter" collapsed={collapsed} />
-                <StudentSubItem to={ROUTES.ADMIN_STUDENT_ID_CARDS} label="Student ID Cards" collapsed={collapsed} />
-                <StudentSubItem to={ROUTES.ADMIN_STUDENT_PRINT_LIST} label="Print Basic List" collapsed={collapsed} />
-                <StudentSubItem to={ROUTES.ADMIN_STUDENT_LOGINS} label="Manage Login" collapsed={collapsed} />
-                <StudentSubItem to={ROUTES.ADMIN_STUDENT_PROMOTE} label="Promote Students" collapsed={collapsed} />
+                <StudentSubItem
+                  to={ROUTES.ADMIN_STUDENTS}
+                  label="All Students"
+                  collapsed={collapsed}
+                  end
+                />
+                <StudentSubItem
+                  to={ROUTES.ADMIN_STUDENT_ADD}
+                  label="Add New"
+                  collapsed={collapsed}
+                />
+                <StudentSubItem
+                  to={ROUTES.ADMIN_STUDENT_FAMILIES}
+                  label="Manage Families"
+                  collapsed={collapsed}
+                />
+                <StudentSubItem
+                  to={ROUTES.ADMIN_STUDENT_ACTIVE_INACTIVE}
+                  label="Active / Inactive"
+                  collapsed={collapsed}
+                />
+                <StudentSubItem
+                  to={ROUTES.ADMIN_STUDENT_ADMISSION_LETTERS}
+                  label="Admission Letter"
+                  collapsed={collapsed}
+                />
+                <StudentSubItem
+                  to={ROUTES.ADMIN_STUDENT_ID_CARDS}
+                  label="Student ID Cards"
+                  collapsed={collapsed}
+                />
+                <StudentSubItem
+                  to={ROUTES.ADMIN_STUDENT_PRINT_LIST}
+                  label="Print Basic List"
+                  collapsed={collapsed}
+                />
+                <StudentSubItem
+                  to={ROUTES.ADMIN_STUDENT_LOGINS}
+                  label="Manage Login"
+                  collapsed={collapsed}
+                />
+                <StudentSubItem
+                  to={ROUTES.ADMIN_STUDENT_PROMOTE}
+                  label="Promote Students"
+                  collapsed={collapsed}
+                />
               </div>
             )}
           </div>
@@ -348,12 +390,6 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
             collapsed={collapsed}
           />
           <NavItem
-            to={ROUTES.ADMIN_TRANSPORT}
-            icon={Bus}
-            label="Transport"
-            collapsed={collapsed}
-          />
-          <NavItem
             to={ROUTES.ADMIN_INVENTORY}
             icon={Package}
             label="Inventory"
@@ -385,12 +421,67 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
             label="Communications"
             collapsed={collapsed}
           />
+          <NavItem
+            to="/admin/transport"
+            icon={Bus}
+            label="Transport"
+            collapsed={collapsed}
+          />
+          <NavItem
+            to="/admin/inventory"
+            icon={Package}
+            label="Inventory & POS"
+            collapsed={collapsed}
+          />
+          <NavItem
+            to="/admin/id-cards"
+            icon={CreditCard}
+            label="ID Cards"
+            collapsed={collapsed}
+          />
+          <NavItem
+            to="/admin/certificates"
+            icon={Award}
+            label="Certificates"
+            collapsed={collapsed}
+          />
+          <NavItem
+            to="/admin/quiz"
+            icon={HelpCircle}
+            label="Quiz"
+            collapsed={collapsed}
+          />
+          <NavItem
+            to="/admin/diary"
+            icon={BookCopy}
+            label="Homework Diary"
+            collapsed={collapsed}
+          />
+          <NavItem
+            to="/admin/study-materials"
+            icon={BookMarked}
+            label="Study Materials"
+            collapsed={collapsed}
+          />
+          <NavItem
+            to="/admin/online-classes"
+            icon={Video}
+            label="Online Classes"
+            collapsed={collapsed}
+          />
 
           {!collapsed && <SidebarSection label="System" />}
+
           <NavItem
             to="/admin/system"
             icon={Database}
             label="Backups & Logs"
+            collapsed={collapsed}
+          />
+          <NavItem
+            to="/admin/website"
+            icon={Globe}
+            label="Website"
             collapsed={collapsed}
           />
           <NavItem

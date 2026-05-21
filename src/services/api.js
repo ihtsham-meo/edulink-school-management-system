@@ -14,9 +14,11 @@ const api = axios.create({
 // Request interceptor — attach token to every request
 api.interceptors.request.use(
   (config) => {
-    const { token, tokenType = "Bearer" } = store.getState().auth;
+   const token = store.getState().auth.token;
+    // const { token, tokenType = "Bearer" } = store.getState().auth;
     if (token) {
-      config.headers.Authorization = `${tokenType} ${token}`;
+      config.headers.Authorization = `Bearer ${token}`;
+      // config.headers.Authorization = `${tokenType} ${token}`;
     }
     return config;
   },
@@ -30,11 +32,12 @@ api.interceptors.response.use(
     const status = error.response?.status;
 
     // Token expired or unauthorized — auto logout
-    const isLoginRequest = error.config?.url?.includes(API.LOGIN);
+    // const isLoginRequest = error.config?.url?.includes(API.LOGIN);
 
-    if (status === 401 && !isLoginRequest) {
-      localStorage.removeItem("auth");
-      store.dispatch(logout());
+    // if (status === 401 && !isLoginRequest) {
+    //   localStorage.removeItem("auth");
+        if (status === 401) {
+    store.dispatch(logout());
       window.location.href = "/login";
     }
 

@@ -30,8 +30,24 @@ import {
 } from "../../data/mockData";
 import { dashboardService } from "../../services/dashboardService";
 
+
 const AdminDashboard = () => {
   const [stats, setStats] = useState({});
+  const [time, setTime] = useState(() => new Date());
+
+
+    useEffect(() => {
+    const interval = setInterval(() => setTime(new Date()), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+
+   const formattedDate = time.toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
 
   useEffect(() => {
     const loadStats = async () => {
@@ -54,9 +70,10 @@ const AdminDashboard = () => {
           Dashboard
         </h1>
         <p className="text-light-text-secondary dark:text-dark-text-secondary text-sm mt-0.5">
-          Welcome back, Super Admin — Wednesday, 14 May 2026
+          Welcome back, Super Admin — {formattedDate}
         </p>
       </div>
+
 
       {/* KPI Stat Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

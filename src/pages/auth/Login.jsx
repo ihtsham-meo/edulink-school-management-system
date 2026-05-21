@@ -23,29 +23,61 @@ const loginSchema = z.object({
   remember: z.boolean().optional(),
 });
 
-const roleRedirects = {
-  [ROLES.ADMIN]: ROUTES.ADMIN_DASHBOARD,
-  [ROLES.TEACHER]: ROUTES.TEACHER_DASHBOARD,
-  [ROLES.STUDENT]: ROUTES.STUDENT_DASHBOARD,
-};
+// const roleRedirects = {
+//   [ROLES.ADMIN]: ROUTES.ADMIN_DASHBOARD,
+//   [ROLES.TEACHER]: ROUTES.TEACHER_DASHBOARD,
+//   [ROLES.STUDENT]: ROUTES.STUDENT_DASHBOARD,
+// };
 
-const getAuthError = (error) => {
-  const data = error.response?.data;
+// const getAuthError = (error) => {
+//   const data = error.response?.data;
 
-  if (typeof data?.message === "string") {
-    return data.message;
-  }
+//   if (typeof data?.message === "string") {
+//     return data.message;
+//   }
 
-  if (data?.errors) {
-    const firstError = Object.values(data.errors).flat()[0];
-    if (firstError) return firstError;
-  }
+//   if (data?.errors) {
+//     const firstError = Object.values(data.errors).flat()[0];
+//     if (firstError) return firstError;
+//   }
 
-  if (error.code === "ERR_NETWORK") {
-    return "Cannot reach the backend. Check that the API server is running and CORS is enabled.";
-  }
+//   if (error.code === "ERR_NETWORK") {
+//     return "Cannot reach the backend. Check that the API server is running and CORS is enabled.";
+//   }
 
-  return "Invalid email or password. Please try again.";
+//   return "Invalid email or password. Please try again.";
+// ── Mock users for testing ──
+const MOCK_USERS = {
+  "admin@edulink.com": {
+    password: "admin123",
+    role: ROLES.ADMIN,
+    name: "Super Admin",
+    redirect: ROUTES.ADMIN_DASHBOARD,
+  },
+  "teacher@edulink.com": {
+    password: "teacher123",
+    role: ROLES.TEACHER,
+    name: "Ms. Fatima Zahra",
+    redirect: ROUTES.TEACHER_DASHBOARD,
+  },
+  "student@edulink.com": {
+    password: "student123",
+    role: ROLES.STUDENT,
+    name: "Ali Hassan",
+    redirect: ROUTES.STUDENT_DASHBOARD,
+  },
+  "accountant@edulink.com": {
+    password: "accountant123",
+    role: ROLES.ACCOUNTANT,
+    name: "Mr. Accountant",
+    redirect: "/accountant/dashboard",
+  },
+  "parent@edulink.com": {
+    password: "parent123",
+    role: ROLES.PARENT,
+    name: "Mr. Parent",
+    redirect: "/parent/dashboard",
+  },
 };
 
 function Login() {
@@ -73,40 +105,61 @@ function Login() {
     setAuthError("");
     setIsLoading(true);
 
-    try {
-      const response = await authService.login({
-        email: data.email,
-        password: data.password,
-      });
-      const authData = response.data?.data || response.data;
-      const backendUser = authData?.user || {};
-      const token =
-        authData?.token ||
-        authData?.access_token ||
-        authData?.plainTextToken ||
-        authData?.plain_text_token;
-      const role = normalizeRole(backendUser.role || authData?.role);
-      const redirect = roleRedirects[role] || ROUTES.UNAUTHORIZED;
+    // Simulate API call delay
+    await new Promise((resolve) => setTimeout(resolve, 800));
 
-      login({
-        user: {
-          id: backendUser.id,
-          name: backendUser.name,
-          email: backendUser.email || data.email,
-          role: backendUser.role || authData?.role,
-          permissions: backendUser.permissions || [],
-        },
-        token,
-        tokenType: authData?.token_type || "Bearer",
-        role,
-      });
+    const user = MOCK_USERS[data.email];
 
-      navigate(redirect, { replace: true });
-    } catch (error) {
-      setAuthError(getAuthError(error));
-    } finally {
+    // Check credentials
+    if (!user || user.password !== data.password) {
+      setAuthError("Invalid email or password. Please try again.");
+      // try {
+      //   const response = await authService.login({
+      //     email: data.email,
+      //     password: data.password,
+      //   });
+      //   const authData = response.data?.data || response.data;
+      //   const backendUser = authData?.user || {};
+      //   const token =
+      //     authData?.token ||
+      //     authData?.access_token ||
+      //     authData?.plainTextToken ||
+      //     authData?.plain_text_token;
+      //   const role = normalizeRole(backendUser.role || authData?.role);
+      //   const redirect = roleRedirects[role] || ROUTES.UNAUTHORIZED;
+
+      //   login({
+      //     user: {
+      //       id: backendUser.id,
+      //       name: backendUser.name,
+      //       email: backendUser.email || data.email,
+      //       role: backendUser.role || authData?.role,
+      //       permissions: backendUser.permissions || [],
+      //     },
+      //     token,
+      //     tokenType: authData?.token_type || "Bearer",
+      //     role,
+      //   });
+
+      //   navigate(redirect, { replace: true });
+      // } catch (error) {
+      //   setAuthError(getAuthError(error));
+      // } finally {
       setIsLoading(false);
+      return;
     }
+
+    // Login success — save to Redux
+    login({
+      user: { name: user.name, email: data.email },
+      token: "mock-token-" + user.role,
+      role: user.role,
+    });
+
+    // Redirect to role dashboard
+    navigate(user.redirect, { replace: true });
+    setIsLoading(false);
+    // }
   };
 
   return (
@@ -285,9 +338,29 @@ function Login() {
             </button>
           </form>
 
-          <p className="mt-5 text-xs text-light-text-tertiary dark:text-dark-text-tertiary">
-            Use the credentials provided by your backend developer.
-          </p>
+          {/* Demo accounts */}
+          <div className="mt-6 p-4 rounded-lg bg-light-hover dark:bg-dark-hover border border-light-border dark:border-dark-border">
+            <p className="text-light-text-secondary dark:text-dark-text-secondary text-xs font-medium mb-2">
+              Demo accounts
+            </p>
+            <div className="flex flex-col gap-1">
+              <p className="text-light-text-tertiary dark:text-dark-text-tertiary text-xs">
+                Admin: admin@edulink.com / admin123
+              </p>
+              <p className="text-light-text-tertiary dark:text-dark-text-tertiary text-xs">
+                Teacher: teacher@edulink.com / teacher123
+              </p>
+              <p className="text-light-text-tertiary dark:text-dark-text-tertiary text-xs">
+                Student: student@edulink.com / student123
+              </p>
+              <p className="text-light-text-tertiary dark:text-dark-text-tertiary text-xs">
+                Accountant: accountant@edulink.com / accountant123
+              </p>
+              <p className="text-light-text-tertiary dark:text-dark-text-tertiary text-xs">
+                Parent: parent@edulink.com / parent123
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

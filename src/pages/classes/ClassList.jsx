@@ -27,9 +27,9 @@ const normalizeClasses = (payload) => {
       payload?.data ||
       [];
 
-  const list = Array.isArray(items) ? items : items?.id ? [items] : [];
+  if (!Array.isArray(items)) return [];
 
-  return list.map((item) => ({
+  return items.map((item) => ({
     ...item,
     id: item.id,
     name: item.name || "",

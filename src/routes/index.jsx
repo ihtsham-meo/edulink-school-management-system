@@ -23,25 +23,43 @@ import Noticeboard from "../pages/noticeboard/Noticeboard";
 import Profile from "../pages/profile/Profile";
 import ClassList from "../pages/classes/ClassList";
 import ManageTimetable from "../pages/timetable/ManageTimetable";
-import ManageSalaries from '../pages/salary/ManageSalaries'
-import BehaviorRecording from '../pages/behavior/BehaviorRecording'
-import LibraryManagement from '../pages/library/LibraryManagement'
-import VisitorManagement from '../pages/visitor/VisitorManagement'
-import HealthRecords from '../pages/health/HealthRecords'
-import AlumniManagement from '../pages/alumni/AlumniManagement'
-import SportsActivities from '../pages/sports/SportsActivities'
-import StudyMaterials from '../pages/study-materials/StudyMaterials'
-import HomeworkDiary from '../pages/diary/HomeworkDiary'
-import TestList from '../pages/tests/TestList'
-import QuizList from '../pages/quiz/QuizList'
-import GradesResults from '../pages/grades/GradesResults'
-import Communications from '../pages/communications/Communications'
-import TransportRoutes  from '../pages/transport/TransportRoutes'
-import Inventory from '../pages/inventory/Inventory'
-import ExpenseManagement from '../pages/expenses/ExpenseManagement'
-import Gamification from '../pages/gamification/Gamification'
-import SystemBackups from '../pages/system/SystemBackups';
+import ManageSalaries from "../pages/salary/ManageSalaries";
+import BehaviorRecording from "../pages/behavior/BehaviorRecording";
+import LibraryManagement from "../pages/library/LibraryManagement";
+import VisitorManagement from "../pages/visitor/VisitorManagement";
+import HealthRecords from "../pages/health/HealthRecords";
+import AlumniManagement from "../pages/alumni/AlumniManagement";
+import SportsActivities from "../pages/sports/SportsActivities";
+import StudyMaterials from "../pages/study-materials/StudyMaterials";
+import HomeworkDiary from "../pages/diary/HomeworkDiary";
+import TestList from "../pages/tests/TestList";
+import QuizList from "../pages/quiz/QuizList";
+import GradesResults from "../pages/grades/GradesResults";
+import Communications from "../pages/communications/Communications";
+import TransportRoutes from "../pages/transport/TransportRoutes";
+import Inventory from "../pages/inventory/Inventory";
+import ExpenseManagement from "../pages/expenses/ExpenseManagement";
+import Gamification from "../pages/gamification/Gamification";
+import SystemBackups from "../pages/system/SystemBackups";
 
+//Accountant
+import AccountantLayout from "../components/layout/AccountantLayout";
+import AccountantDashboard from "../pages/dashboard/AccountantDashboard";
+import AccountantFeePayment from "../pages/fees/AccountantFeePayment";
+import BalanceSheet from "../pages/fees/BalanceSheet";
+
+// Teacher
+import TeacherStudents from "../pages/students/TeacherStudents";
+import Submissions from "../pages/assignments/Submissions";
+import LeaveRequest from "../pages/staff/LeaveRequest";
+import StudentAssignments from "../pages/assignments/StudentAssignments";
+import StudentResults from "../pages/grades/StudentResults";
+import StudentFees from "../pages/fees/StudentFees";
+
+// Parent
+import ParentLayout from "../components/layout/ParentLayout";
+import ParentDashboard from "../pages/dashboard/ParentDashboard";
+import ParentHealthView from "../pages/health/ParentHealthView";
 
 // Auth
 import Login from "../pages/auth/Login";
@@ -76,9 +94,15 @@ function AppRouter() {
           <Route path="students/add" element={<AddStudent />} />
           <Route path="students/bulk" element={<AddBulkStudents />} />
           <Route path="students/families" element={<ManageFamilies />} />
-          <Route path="students/active-inactive" element={<ActiveInactiveStudents />} />
+          <Route
+            path="students/active-inactive"
+            element={<ActiveInactiveStudents />}
+          />
           <Route path="students/print-list" element={<StudentList />} />
-          <Route path="students/admission-letters" element={<AdmissionLetters />} />
+          <Route
+            path="students/admission-letters"
+            element={<AdmissionLetters />}
+          />
           <Route path="students/id-cards" element={<StudentIdCards />} />
           <Route path="students/logins" element={<StudentLogins />} />
           <Route path="students/promote" element={<PromoteStudents />} />
@@ -121,9 +145,21 @@ function AppRouter() {
             </ProtectedRoute>
           }
         >
-          <Route path="dashboard" element={<TeacherDashboard />} />
-          <Route path="profile" element={<Profile />} />
           <Route path="behavior" element={<BehaviorRecording />} />
+          <Route path="dashboard" element={<TeacherDashboard />} />
+          <Route path="attendance" element={<StudentAttendance />} />
+          <Route path="assignments" element={<AssignmentList />} />
+          <Route path="timetable" element={<ManageTimetable />} />
+          <Route path="study-materials" element={<StudyMaterials />} />
+          <Route path="diary" element={<HomeworkDiary />} />
+          <Route path="noticeboard" element={<Noticeboard />} />
+          <Route path="grades" element={<GradesResults />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="exams" element={<ExamList />} />
+          <Route path="tests" element={<TestList />} />
+          <Route path="students" element={<TeacherStudents />} />
+          <Route path="submissions" element={<Submissions />} />
+          <Route path="leave" element={<LeaveRequest />} />
         </Route>
 
         {/* Student */}
@@ -135,7 +171,58 @@ function AppRouter() {
             </ProtectedRoute>
           }
         >
+          <Route path="profile" element={<Profile />} />
           <Route path="dashboard" element={<StudentDashboard />} />
+          <Route path="timetable" element={<ManageTimetable />} />
+          <Route path="assignments" element={<StudentAssignments />} />
+          <Route path="results" element={<StudentResults />} />
+          <Route path="attendance" element={<StudentAttendance />} />
+          <Route path="fees" element={<StudentFees />} />
+          <Route path="study-materials" element={<StudyMaterials />} />
+          <Route path="diary" element={<HomeworkDiary />} />
+          <Route path="noticeboard" element={<Noticeboard />} />
+          <Route path="exams" element={<ExamList />} />
+          <Route path="sports" element={<SportsActivities />} />
+        </Route>
+
+        {/* Accountant routes */}
+        <Route
+          path="/accountant"
+          element={
+            <ProtectedRoute allowedRoles={[ROLES.ACCOUNTANT]}>
+              <AccountantLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="dashboard" element={<AccountantDashboard />} />
+          <Route path="fee-payment" element={<AccountantFeePayment />} />
+          <Route path="fee-vouchers" element={<FeeManagement />} />
+          <Route path="defaulters" element={<FeeManagement />} />
+          <Route path="expenses" element={<AccountantDashboard />} />
+          <Route path="balance-sheet" element={<BalanceSheet />} />
+          <Route path="reports" element={<AccountantDashboard />} />
+          <Route path="profile" element={<Profile />} />
+        </Route>
+
+        {/* Parent routes */}
+        <Route
+          path="/parent"
+          element={
+            <ProtectedRoute allowedRoles={[ROLES.PARENT]}>
+              <ParentLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="dashboard" element={<ParentDashboard />} />
+          {/* <Route path="attendance" element={<StudentAttendanceView />} /> */}
+          <Route path="results" element={<StudentResults />} />
+          <Route path="assignments" element={<StudentAssignments />} />
+          <Route path="timetable" element={<ManageTimetable />} />
+          <Route path="health" element={<ParentHealthView />} />
+          <Route path="sports" element={<SportsActivities />} />
+          <Route path="fees" element={<StudentFees />} />
+          <Route path="diary" element={<HomeworkDiary />} />
+          <Route path="noticeboard" element={<Noticeboard />} />
           <Route path="profile" element={<Profile />} />
         </Route>
 

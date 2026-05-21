@@ -1,9 +1,10 @@
 export const ROLES = {
-  ADMIN: "admin",
-  TEACHER: "teacher",
-  STUDENT: "student",
-};
-
+  ADMIN:      'admin',
+  TEACHER:    'teacher',
+  STUDENT:    'student',
+  ACCOUNTANT: 'accountant',
+  PARENT:     'parent',
+}
 export const normalizeRole = (role) => {
   const normalized = String(role || "").trim().toLowerCase();
 
