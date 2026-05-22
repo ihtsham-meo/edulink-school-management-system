@@ -33,6 +33,7 @@ import {
   BookCopy,
   Globe,
   Database,
+  UserPlus,
 } from "lucide-react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import SidebarSection from "./SidebarSection";
@@ -118,7 +119,7 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
 
   const handleLogout = async () => {
     await signOut();
-    navigate(ROUTES.LOGIN, { replace: true });
+    navigate(ROUTES.LOGIN, { replace: true });ADMIN_STAFF
   };
 
   return (
@@ -226,7 +227,7 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
                 />
                 <StudentSubItem
                   to={ROUTES.ADMIN_STUDENT_ADD}
-                  label="Add New"
+                  label="Admit Student"
                   collapsed={collapsed}
                 />
                 <StudentSubItem
@@ -291,6 +292,12 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
             to={ROUTES.ADMIN_ATTENDANCE}
             icon={CalendarCheck}
             label="Attendance"
+            collapsed={collapsed}
+          />
+          <NavItem
+            to="/admin/admissions/admit"
+            icon={UserPlus}
+            label="Admit Student"
             collapsed={collapsed}
           />
           <NavItem
@@ -443,12 +450,6 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
             to="/admin/certificates"
             icon={Award}
             label="Certificates"
-            collapsed={collapsed}
-          />
-          <NavItem
-            to="/admin/quiz"
-            icon={HelpCircle}
-            label="Quiz"
             collapsed={collapsed}
           />
           <NavItem
