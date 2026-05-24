@@ -33,7 +33,7 @@ import {
   BookCopy,
   Globe,
   Database,
-  UserPlus,
+  ClipboardCheck,
 } from "lucide-react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import SidebarSection from "./SidebarSection";
@@ -93,7 +93,7 @@ function StudentSubItem({ to, label, collapsed, end = false }) {
       className={({ isActive }) =>
         `relative block py-1.5 pl-15 pr-3 text-sm transition-colors ${
           isActive
-            ? "font-semibold text-accent"
+            ? "font-semibold text-gray-600 dark:text-gray-300"
             : "text-light-text-secondary hover:text-light-text-primary dark:text-dark-text-secondary dark:hover:text-dark-text-primary"
         }`
       }
@@ -101,7 +101,7 @@ function StudentSubItem({ to, label, collapsed, end = false }) {
       {({ isActive }) => (
         <>
           {isActive && (
-            <span className="absolute left-9 top-1/2 h-2.5 w-2.5 -translate-y-1/2 rounded-full bg-accent" />
+            <span className="absolute left-9 top-1/2 h-2.5 w-2.5 -translate-y-1/2 rounded-full bg-gray-500" />
           )}
           {label}
         </>
@@ -115,11 +115,16 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
   const navigate = useNavigate();
   const location = useLocation();
   const isStudentsRoute = location.pathname.startsWith("/admin/students");
+  const isAdmissionsRoute = location.pathname.startsWith("/admin/admissions");
   const [studentsOpen, setStudentsOpen] = useState(isStudentsRoute);
+  const [admissionsOpen, setAdmissionsOpen] = useState(isAdmissionsRoute);
+  const showStudentsMenu = !isAdmissionsRoute && (studentsOpen || isStudentsRoute);
+  const showAdmissionsMenu =
+    !isStudentsRoute && (admissionsOpen || isAdmissionsRoute);
 
   const handleLogout = async () => {
     await signOut();
-    navigate(ROUTES.LOGIN, { replace: true });ADMIN_STAFF
+    navigate(ROUTES.LOGIN, { replace: true });
   };
 
   return (
@@ -197,13 +202,14 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
                   return;
                 }
                 setStudentsOpen((open) => !open);
+                setAdmissionsOpen(false);
               }}
               title={collapsed ? "Students" : undefined}
               className={`mx-2 flex w-[calc(100%-1rem)] items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 ${
                 collapsed ? "justify-center" : ""
               } ${
                 isStudentsRoute
-                  ? "bg-accent text-white font-medium"
+                  ? "bg-gray-500 text-white font-medium"
                   : "text-light-text-secondary hover:bg-light-hover dark:text-dark-text-secondary dark:hover:bg-dark-hover"
               }`}
             >
@@ -211,12 +217,12 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
               {!collapsed && (
                 <>
                   <span className="flex-1 truncate text-left">Students</span>
-                  {studentsOpen ? <Minus size={15} /> : <Plus size={15} />}
+                  {showStudentsMenu ? <Minus size={15} /> : <Plus size={15} />}
                 </>
               )}
             </button>
 
-            {!collapsed && studentsOpen && (
+            {!collapsed && showStudentsMenu && (
               <div className="relative ml-2 mt-2 pb-2">
                 <span className="absolute left-9 top-0 h-full w-px bg-light-border dark:bg-dark-border" />
                 <StudentSubItem
@@ -227,7 +233,7 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
                 />
                 <StudentSubItem
                   to={ROUTES.ADMIN_STUDENT_ADD}
-                  label="Admit Student"
+                  label="Add New"
                   collapsed={collapsed}
                 />
                 <StudentSubItem
@@ -269,11 +275,67 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
             )}
           </div>
           <NavItem
-            to={ROUTES.ADMIN_TEACHERS}
+            to={ROUTES.ADMIN_STAFF}
             icon={UserCheck}
-            label="Teachers"
+            label="Teachers & Staff"
             collapsed={collapsed}
           />
+
+          {/* ── Admissions dropdown ── */}
+          <div>
+            <button
+              type="button"
+              onClick={() => {
+                if (collapsed) {
+                  navigate(ROUTES.ADMIN_ADMISSION_REQUESTS);
+                  return;
+                }
+                setAdmissionsOpen((open) => !open);
+                setStudentsOpen(false);
+              }}
+              title={collapsed ? "Admissions" : undefined}
+              className={`mx-2 flex w-[calc(100%-1rem)] items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 ${
+                collapsed ? "justify-center" : ""
+              } ${
+                isAdmissionsRoute
+                  ? "bg-gray-500 text-white font-medium"
+                  : "text-light-text-secondary hover:bg-light-hover dark:text-dark-text-secondary dark:hover:bg-dark-hover"
+              }`}
+            >
+              <ClipboardCheck size={17} className="shrink-0" />
+              {!collapsed && (
+                <>
+                  <span className="flex-1 truncate text-left">Admissions</span>
+                  {showAdmissionsMenu ? (
+                    <Minus size={15} />
+                  ) : (
+                    <Plus size={15} />
+                  )}
+                </>
+              )}
+            </button>
+
+            {!collapsed && showAdmissionsMenu && (
+              <div className="relative ml-2 mt-2 pb-2">
+                <span className="absolute left-9 top-0 h-full w-px bg-light-border dark:bg-dark-border" />
+                <StudentSubItem
+                  to={ROUTES.ADMIN_ADMISSION_REQUESTS}
+                  label="Requests"
+                  collapsed={collapsed}
+                />
+                <StudentSubItem
+                  to={ROUTES.ADMIN_ADMISSION_INQUIRIES}
+                  label="Inquiries Board"
+                  collapsed={collapsed}
+                />
+                <StudentSubItem
+                  to={ROUTES.ADMIN_ADMISSION_BULK}
+                  label="Bulk Admission"
+                  collapsed={collapsed}
+                />
+              </div>
+            )}
+          </div>
           <NavItem
             to={ROUTES.ADMIN_CLASSES}
             icon={Building2}
@@ -292,12 +354,6 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
             to={ROUTES.ADMIN_ATTENDANCE}
             icon={CalendarCheck}
             label="Attendance"
-            collapsed={collapsed}
-          />
-          <NavItem
-            to="/admin/admissions/admit"
-            icon={UserPlus}
-            label="Admit Student"
             collapsed={collapsed}
           />
           <NavItem
@@ -450,6 +506,12 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
             to="/admin/certificates"
             icon={Award}
             label="Certificates"
+            collapsed={collapsed}
+          />
+          <NavItem
+            to="/admin/quiz"
+            icon={HelpCircle}
+            label="Quiz"
             collapsed={collapsed}
           />
           <NavItem

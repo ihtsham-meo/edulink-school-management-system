@@ -8,7 +8,7 @@ import AdminDashboard from "../pages/dashboard/AdminDashboard";
 
 // Students
 import StudentList from "../pages/students/StudentList";
-import AdmitStudent from "../pages/admissions/AdmitStudent";
+import AddStudent from "../pages/students/AddStudent";
 import AddBulkStudents from "../pages/students/AddBulkStudents";
 import ManageFamilies from "../pages/students/ManageFamilies";
 import ActiveInactiveStudents from "../pages/students/ActiveInactiveStudents";
@@ -17,8 +17,10 @@ import StudentIdCards from "../pages/students/StudentIdCards";
 import StudentLogins from "../pages/students/StudentLogins";
 import PromoteStudents from "../pages/students/PromoteStudents";
 
-// Staff
-import StaffList from "../pages/staff/StaffList";
+// Admissions
+import AdmissionRequests from "../pages/admissions/AdmissionRequests";
+import Inquiries from "../pages/admissions/Inquiries";
+import BulkAdmission from "../pages/admissions/BulkAdmission";
 
 // Classes
 import ClassList from "../pages/classes/ClassList";
@@ -34,6 +36,9 @@ import QuizList from "../pages/quiz/QuizList";
 import ExamList from "../pages/exams/ExamList";
 import GradesResults from "../pages/grades/GradesResults";
 import BehaviorRecording from "../pages/behavior/BehaviorRecording";
+
+// People
+import StaffList from "../pages/staff/StaffList";
 
 // Finance
 import FeeManagement from "../pages/fees/FeeManagement";
@@ -72,9 +77,14 @@ function AdminRoutes() {
       {/* ── Overview ─────────────────────────────────────────────────────── */}
       <Route path="dashboard" element={<AdminDashboard />} />
 
+      {/* ── Admissions ───────────────────────────────────────────────────── */}
+      <Route path="admissions/requests" element={<AdmissionRequests />} />
+      <Route path="admissions/inquiries" element={<Inquiries />} />
+      <Route path="admissions/bulk" element={<BulkAdmission />} />
+
       {/* ── Students ─────────────────────────────────────────────────────── */}
       <Route path="students" element={<StudentList />} />
-      <Route path="admissions" element={<AdmitStudent />} />
+      <Route path="students/add" element={<AddStudent />} />
       <Route path="students/bulk" element={<AddBulkStudents />} />
       <Route path="students/families" element={<ManageFamilies />} />
       <Route

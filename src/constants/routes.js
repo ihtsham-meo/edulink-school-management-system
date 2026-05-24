@@ -9,7 +9,7 @@ export const ROUTES = {
 
   // Students
   ADMIN_STUDENTS: "/admin/students",
-  ADMIN_STUDENT_ADD: "/admin/admissions",
+  ADMIN_STUDENT_ADD: "/admin/students/add",
   ADMIN_STUDENT_BULK: "/admin/students/bulk",
   ADMIN_STUDENT_FAMILIES: "/admin/students/families",
   ADMIN_STUDENT_ACTIVE_INACTIVE: "/admin/students/active-inactive",
@@ -30,6 +30,7 @@ export const ROUTES = {
 
   // People
   ADMIN_TEACHERS: "/admin/staff",
+  ADMIN_STAFF: "/admin/staff",
   ADMIN_STAFF_DETAIL: "/admin/staff/:id",
 
   // Academic
