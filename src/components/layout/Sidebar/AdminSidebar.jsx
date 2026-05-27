@@ -453,12 +453,6 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
             collapsed={collapsed}
           />
           <NavItem
-            to={ROUTES.ADMIN_INVENTORY}
-            icon={Package}
-            label="Inventory"
-            collapsed={collapsed}
-          />
-          <NavItem
             to="/admin/alumni"
             icon={UserSquare2}
             label="Alumni"
@@ -506,18 +500,6 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
             to="/admin/certificates"
             icon={Award}
             label="Certificates"
-            collapsed={collapsed}
-          />
-          <NavItem
-            to="/admin/quiz"
-            icon={HelpCircle}
-            label="Quiz"
-            collapsed={collapsed}
-          />
-          <NavItem
-            to="/admin/diary"
-            icon={BookCopy}
-            label="Homework Diary"
             collapsed={collapsed}
           />
           <NavItem
