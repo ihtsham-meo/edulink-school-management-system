@@ -43,7 +43,8 @@ function StudentSidebar({ isOpen, onClose, collapsed }) {
         w-[220px] min-w-[220px]
         bg-light-card dark:bg-dark-card
         border-r border-light-border dark:border-dark-border
-        transition-transform duration-300
+        transition-transform duration-300 overflow-hidden
+        ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         ${collapsed ? "lg:w-[60px] lg:min-w-[60px]" : "w-[220px] min-w-[220px]"}
       `}
       >
@@ -88,6 +89,7 @@ function StudentSidebar({ isOpen, onClose, collapsed }) {
             to={ROUTES.STUDENT_DASHBOARD}
             icon={LayoutDashboard}
             label="Dashboard"
+            collapsed={collapsed}
           />
 
           {!collapsed && <SidebarSection label="Academics" />}
@@ -95,11 +97,13 @@ function StudentSidebar({ isOpen, onClose, collapsed }) {
             to={ROUTES.STUDENT_ATTENDANCE}
             icon={CalendarCheck}
             label="My Attendance"
+            collapsed={collapsed}
           />
           <SidebarItem
             to="/student/timetable"
             icon={Clock}
             label="My Timetable"
+            collapsed={collapsed}
           />
           <SidebarItem
             to={ROUTES.STUDENT_ASSIGNMENTS}
@@ -107,21 +111,25 @@ function StudentSidebar({ isOpen, onClose, collapsed }) {
             label="Assignments"
             badge="3"
             badgeColor="red"
+            collapsed={collapsed}
           />
           <SidebarItem
             to={ROUTES.STUDENT_RESULTS}
             icon={BarChart3}
             label="My Results"
+            collapsed={collapsed}
           />
           <SidebarItem
             to="/student/exams"
             icon={BookOpen}
             label="Exam Schedule"
+            collapsed={collapsed}
           />
           <SidebarItem
             to="/student/study-materials"
             icon={Library}
             label="Study Materials"
+            collapsed={collapsed}
           />
 
           {!collapsed && <SidebarSection label="School" />}
@@ -129,21 +137,25 @@ function StudentSidebar({ isOpen, onClose, collapsed }) {
             to={ROUTES.STUDENT_FEES}
             icon={Banknote}
             label="Fee Status"
+            collapsed={collapsed}
           />
           <SidebarItem
             to="/student/diary"
             icon={BookCopy}
             label="Homework Diary"
+            collapsed={collapsed}
           />
           <SidebarItem
             to="/student/noticeboard"
             icon={Megaphone}
             label="Noticeboard"
+            collapsed={collapsed}
           />
           <SidebarItem
             to="/student/sports"
             icon={Trophy}
             label="Sports & Activities"
+            collapsed={collapsed}
           />
         </nav>
 
@@ -170,7 +182,7 @@ function StudentSidebar({ isOpen, onClose, collapsed }) {
           <button
             onClick={handleLogout}
             title={collapsed ? "Logout" : undefined}
-            className="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-950 transition-colors"
+            className={`flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-950 transition-colors ${collapsed ? "justify-center" : ""}`}
           >
             <LogOut size={17} />
             {!collapsed && "Logout"}

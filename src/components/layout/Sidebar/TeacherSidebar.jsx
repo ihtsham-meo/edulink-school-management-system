@@ -1,4 +1,5 @@
-import { GraduationCap, X, LogOut } from "lucide-react";
+import { useState } from "react";
+import { GraduationCap, X, LogOut, Plus, Minus } from "lucide-react";
 import {
   LayoutDashboard,
   Users,
@@ -19,11 +20,18 @@ import SidebarItem from "./SidebarItem";
 import SidebarSection from "./SidebarSection";
 import { ROUTES } from "../../../constants/routes";
 import { useAuth } from "../../../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function TeacherSidebar({ isOpen, onClose, collapsed }) {
   const { signOut, user, role } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isTestsRoute = location.pathname.startsWith("/teacher/tests");
+  const isExamsRoute = location.pathname.startsWith("/teacher/exams");
+  const isAttendanceRoute = location.pathname.startsWith("/teacher/attendance");
+  const [testsOpen, setTestsOpen] = useState(isTestsRoute);
+  const [examsOpen, setExamsOpen] = useState(isExamsRoute);
+  const [attendanceOpen, setAttendanceOpen] = useState(isAttendanceRoute);
 
   const handleLogout = async () => {
     await signOut();
@@ -108,12 +116,45 @@ function TeacherSidebar({ isOpen, onClose, collapsed }) {
             label="My Timetable"
             collapsed={collapsed}
           />
-          <SidebarItem
-            to={ROUTES.TEACHER_ATTENDANCE}
-            icon={CalendarCheck}
-            label="Attendance"
-            collapsed={collapsed}
-          />
+          {/* ── Attendance dropdown ── */}
+          <div>
+            <button
+              type="button"
+              onClick={() => {
+                if (collapsed) {
+                  navigate(ROUTES.TEACHER_ATTENDANCE);
+                  return;
+                }
+                setAttendanceOpen((o) => !o);
+              }}
+              title={collapsed ? "Attendance" : undefined}
+              className={`mx-2 flex w-[calc(100%-1rem)] items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 ${collapsed ? "justify-center" : ""} ${isAttendanceRoute ? "bg-accent text-white font-medium" : "text-light-text-secondary hover:bg-light-hover dark:text-dark-text-secondary dark:hover:bg-dark-hover"}`}
+            >
+              <CalendarCheck size={17} className="shrink-0" />
+              {!collapsed && (
+                <>
+                  <span className="flex-1 truncate text-left">Attendance</span>
+                  {attendanceOpen ? <Minus size={15} /> : <Plus size={15} />}
+                </>
+              )}
+            </button>
+            {!collapsed && attendanceOpen && (
+              <div className="relative ml-5 mt-1 pb-1 border-l border-light-border dark:border-dark-border pl-4 flex flex-col gap-0.5">
+                {[
+                  { to: ROUTES.TEACHER_ATTENDANCE, label: "Mark Attendance" },
+                  { to: ROUTES.TEACHER_ATTENDANCE_REPORTS, label: "Reports" },
+                ].map(({ to, label }) => (
+                  <SidebarItem
+                    key={to}
+                    to={to}
+                    label={label}
+                    collapsed={false}
+                    icon={null}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
           <SidebarItem
             to={ROUTES.TEACHER_BEHAVIOR}
             icon={ClipboardList}
@@ -146,18 +187,99 @@ function TeacherSidebar({ isOpen, onClose, collapsed }) {
             label="Grade Entry"
             collapsed={collapsed}
           />
-          <SidebarItem
-            to="/teacher/tests"
-            icon={BarChart3}
-            label="Test Management"
-            collapsed={collapsed}
-          />
-          <SidebarItem
-            to="/teacher/exams"
-            icon={BookOpen}
-            label="Exam Schedule"
-            collapsed={collapsed}
-          />
+          {/* ── Tests dropdown ── */}
+          <div>
+            <button
+              type="button"
+              onClick={() => {
+                if (collapsed) {
+                  navigate(ROUTES.TEACHER_TESTS);
+                  return;
+                }
+                setTestsOpen((o) => !o);
+              }}
+              title={collapsed ? "Tests" : undefined}
+              className={`mx-2 flex w-[calc(100%-1rem)] items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 ${collapsed ? "justify-center" : ""} ${
+                isTestsRoute
+                  ? "bg-accent text-white font-medium"
+                  : "text-light-text-secondary hover:bg-light-hover dark:text-dark-text-secondary dark:hover:bg-dark-hover"
+              }`}
+            >
+              <BarChart3 size={17} className="shrink-0" />
+              {!collapsed && (
+                <>
+                  <span className="flex-1 truncate text-left">
+                    Test Management
+                  </span>
+                  {testsOpen ? <Minus size={15} /> : <Plus size={15} />}
+                </>
+              )}
+            </button>
+            {!collapsed && testsOpen && (
+              <div className="relative ml-5 mt-1 pb-1 border-l border-light-border dark:border-dark-border pl-4 flex flex-col gap-0.5">
+                {[
+                  { to: ROUTES.TEACHER_TESTS, label: "All Tests" },
+                  { to: ROUTES.TEACHER_TEST_MARKS_ENTRY, label: "Marks Entry" },
+                  { to: ROUTES.TEACHER_TEST_TABULATION, label: "Tabulation" },
+                  { to: ROUTES.TEACHER_TEST_SCHEDULE, label: "Schedule" },
+                ].map(({ to, label }) => (
+                  <SidebarItem
+                    key={to}
+                    to={to}
+                    label={label}
+                    collapsed={false}
+                    icon={null}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+          {/* ── Exams dropdown ── */}
+          <div>
+            <button
+              type="button"
+              onClick={() => {
+                if (collapsed) {
+                  navigate(ROUTES.TEACHER_EXAMS);
+                  return;
+                }
+                setExamsOpen((o) => !o);
+              }}
+              title={collapsed ? "Exams" : undefined}
+              className={`mx-2 flex w-[calc(100%-1rem)] items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 ${collapsed ? "justify-center" : ""} ${
+                isExamsRoute
+                  ? "bg-accent text-white font-medium"
+                  : "text-light-text-secondary hover:bg-light-hover dark:text-dark-text-secondary dark:hover:bg-dark-hover"
+              }`}
+            >
+              <BookOpen size={17} className="shrink-0" />
+              {!collapsed && (
+                <>
+                  <span className="flex-1 truncate text-left">Exams</span>
+                  {examsOpen ? <Minus size={15} /> : <Plus size={15} />}
+                </>
+              )}
+            </button>
+            {!collapsed && examsOpen && (
+              <div className="relative ml-5 mt-1 pb-1 border-l border-light-border dark:border-dark-border pl-4 flex flex-col gap-0.5">
+                {[
+                  { to: ROUTES.TEACHER_EXAMS, label: "All Exams" },
+                  { to: ROUTES.TEACHER_EXAM_MARKS_ENTRY, label: "Marks Entry" },
+                  { to: ROUTES.TEACHER_EXAM_ADMIT_CARDS, label: "Admit Cards" },
+                  { to: ROUTES.TEACHER_EXAM_MARKSHEETS, label: "Marksheets" },
+                  { to: ROUTES.TEACHER_EXAM_TIMETABLE, label: "Timetable" },
+                ].map(({ to, label }) => (
+                  <SidebarItem
+                    key={to}
+                    to={to}
+                    label={label}
+                    collapsed={false}
+                    icon={null}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
           <SidebarItem
             to="/teacher/results"
             icon={BarChart3}
