@@ -115,18 +115,18 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
   const { signOut, user, role } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const isStudentsRoute = location.pathname.startsWith("/admin/students");
-  const isAdmissionsRoute = location.pathname.startsWith("/admin/admissions");
-  const isTestsRoute = location.pathname.startsWith("/admin/tests");
-  const isExamsRoute = location.pathname.startsWith("/admin/exams");
-  const isFeesRoute = location.pathname.startsWith("/admin/fees");
-  const isAttendanceRoute = location.pathname.startsWith("/admin/attendance");
-  const [studentsOpen, setStudentsOpen] = useState(isStudentsRoute);
-  const [admissionsOpen, setAdmissionsOpen] = useState(isAdmissionsRoute);
-  const [testsOpen, setTestsOpen] = useState(isTestsRoute);
-  const [examsOpen, setExamsOpen] = useState(isExamsRoute);
-  const [feesOpen, setFeesOpen] = useState(isFeesRoute);
-  const [attendanceOpen, setAttendanceOpen] = useState(isAttendanceRoute);
+  const isStudentsRoute    = location.pathname.startsWith("/admin/students");
+  const isAdmissionsRoute  = location.pathname.startsWith("/admin/admissions");
+  const isTestsRoute       = location.pathname.startsWith("/admin/tests");
+  const isExamsRoute       = location.pathname.startsWith("/admin/exams");
+  const isFeesRoute        = location.pathname.startsWith("/admin/fees");
+  const isAttendanceRoute  = location.pathname.startsWith("/admin/attendance");
+  const [studentsOpen, setStudentsOpen]         = useState(isStudentsRoute);
+  const [admissionsOpen, setAdmissionsOpen]     = useState(isAdmissionsRoute);
+  const [testsOpen, setTestsOpen]               = useState(isTestsRoute);
+  const [examsOpen, setExamsOpen]               = useState(isExamsRoute);
+  const [feesOpen, setFeesOpen]                 = useState(isFeesRoute);
+  const [attendanceOpen, setAttendanceOpen]     = useState(isAttendanceRoute);
 
   const handleLogout = async () => {
     await signOut();
@@ -354,13 +354,7 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
           <div>
             <button
               type="button"
-              onClick={() => {
-                if (collapsed) {
-                  navigate(ROUTES.ADMIN_ATTENDANCE);
-                  return;
-                }
-                setAttendanceOpen((o) => !o);
-              }}
+              onClick={() => { if (collapsed) { navigate(ROUTES.ADMIN_ATTENDANCE); return; } setAttendanceOpen((o) => !o); }}
               title={collapsed ? "Attendance" : undefined}
               className={`mx-2 flex w-[calc(100%-1rem)] items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 ${collapsed ? "justify-center" : ""} ${isAttendanceRoute ? "bg-accent text-white font-medium" : "text-light-text-secondary hover:bg-light-hover dark:text-dark-text-secondary dark:hover:bg-dark-hover"}`}
             >
@@ -375,21 +369,9 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
             {!collapsed && attendanceOpen && (
               <div className="relative ml-2 mt-2 pb-2">
                 <span className="absolute left-9 top-0 h-full w-px bg-light-border dark:bg-dark-border" />
-                <StudentSubItem
-                  to={ROUTES.ADMIN_ATTENDANCE}
-                  label="Mark Attendance"
-                  collapsed={collapsed}
-                />
-                <StudentSubItem
-                  to={ROUTES.ADMIN_ATTENDANCE_REPORTS}
-                  label="Reports"
-                  collapsed={collapsed}
-                />
-                <StudentSubItem
-                  to={ROUTES.ADMIN_ATTENDANCE_STAFF}
-                  label="Staff Attendance"
-                  collapsed={collapsed}
-                />
+                <StudentSubItem to={ROUTES.ADMIN_ATTENDANCE}         label="Mark Attendance"  collapsed={collapsed} />
+                <StudentSubItem to={ROUTES.ADMIN_ATTENDANCE_REPORTS} label="Reports"          collapsed={collapsed} />
+                <StudentSubItem to={ROUTES.ADMIN_ATTENDANCE_STAFF}   label="Staff Attendance" collapsed={collapsed} />
               </div>
             )}
           </div>
@@ -422,10 +404,7 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
             <button
               type="button"
               onClick={() => {
-                if (collapsed) {
-                  navigate(ROUTES.ADMIN_TESTS);
-                  return;
-                }
+                if (collapsed) { navigate(ROUTES.ADMIN_TESTS); return; }
                 setTestsOpen((o) => !o);
               }}
               title={collapsed ? "Tests" : undefined}
@@ -446,26 +425,10 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
             {!collapsed && testsOpen && (
               <div className="relative ml-2 mt-2 pb-2">
                 <span className="absolute left-9 top-0 h-full w-px bg-light-border dark:bg-dark-border" />
-                <StudentSubItem
-                  to={ROUTES.ADMIN_TESTS}
-                  label="All Tests"
-                  collapsed={collapsed}
-                />
-                <StudentSubItem
-                  to={ROUTES.ADMIN_TEST_MARKS_ENTRY}
-                  label="Marks Entry"
-                  collapsed={collapsed}
-                />
-                <StudentSubItem
-                  to={ROUTES.ADMIN_TEST_TABULATION}
-                  label="Tabulation"
-                  collapsed={collapsed}
-                />
-                <StudentSubItem
-                  to={ROUTES.ADMIN_TEST_SCHEDULE}
-                  label="Schedule"
-                  collapsed={collapsed}
-                />
+                <StudentSubItem to={ROUTES.ADMIN_TESTS}              label="All Tests"    collapsed={collapsed} />
+                <StudentSubItem to={ROUTES.ADMIN_TEST_MARKS_ENTRY}   label="Marks Entry"  collapsed={collapsed} />
+                <StudentSubItem to={ROUTES.ADMIN_TEST_TABULATION}    label="Tabulation"   collapsed={collapsed} />
+                <StudentSubItem to={ROUTES.ADMIN_TEST_SCHEDULE}      label="Schedule"     collapsed={collapsed} />
               </div>
             )}
           </div>
@@ -480,10 +443,7 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
             <button
               type="button"
               onClick={() => {
-                if (collapsed) {
-                  navigate(ROUTES.ADMIN_EXAMS);
-                  return;
-                }
+                if (collapsed) { navigate(ROUTES.ADMIN_EXAMS); return; }
                 setExamsOpen((o) => !o);
               }}
               title={collapsed ? "Exams" : undefined}
@@ -504,31 +464,11 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
             {!collapsed && examsOpen && (
               <div className="relative ml-2 mt-2 pb-2">
                 <span className="absolute left-9 top-0 h-full w-px bg-light-border dark:bg-dark-border" />
-                <StudentSubItem
-                  to={ROUTES.ADMIN_EXAMS}
-                  label="All Exams"
-                  collapsed={collapsed}
-                />
-                <StudentSubItem
-                  to={ROUTES.ADMIN_EXAM_MARKS_ENTRY}
-                  label="Marks Entry"
-                  collapsed={collapsed}
-                />
-                <StudentSubItem
-                  to={ROUTES.ADMIN_EXAM_ADMIT_CARDS}
-                  label="Admit Cards"
-                  collapsed={collapsed}
-                />
-                <StudentSubItem
-                  to={ROUTES.ADMIN_EXAM_MARKSHEETS}
-                  label="Marksheets"
-                  collapsed={collapsed}
-                />
-                <StudentSubItem
-                  to={ROUTES.ADMIN_EXAM_TIMETABLE}
-                  label="Timetable"
-                  collapsed={collapsed}
-                />
+                <StudentSubItem to={ROUTES.ADMIN_EXAMS}              label="All Exams"    collapsed={collapsed} />
+                <StudentSubItem to={ROUTES.ADMIN_EXAM_MARKS_ENTRY}   label="Marks Entry"  collapsed={collapsed} />
+                <StudentSubItem to={ROUTES.ADMIN_EXAM_ADMIT_CARDS}   label="Admit Cards"  collapsed={collapsed} />
+                <StudentSubItem to={ROUTES.ADMIN_EXAM_MARKSHEETS}    label="Marksheets"   collapsed={collapsed} />
+                <StudentSubItem to={ROUTES.ADMIN_EXAM_TIMETABLE}     label="Timetable"    collapsed={collapsed} />
               </div>
             )}
           </div>
@@ -544,22 +484,14 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
           <div>
             <button
               type="button"
-              onClick={() => {
-                if (collapsed) {
-                  navigate(ROUTES.ADMIN_FEES);
-                  return;
-                }
-                setFeesOpen((o) => !o);
-              }}
+              onClick={() => { if (collapsed) { navigate(ROUTES.ADMIN_FEES); return; } setFeesOpen((o) => !o); }}
               title={collapsed ? "Fee Management" : undefined}
               className={`mx-2 flex w-[calc(100%-1rem)] items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 ${collapsed ? "justify-center" : ""} ${isFeesRoute ? "bg-accent text-white font-medium" : "text-light-text-secondary hover:bg-light-hover dark:text-dark-text-secondary dark:hover:bg-dark-hover"}`}
             >
               <Banknote size={17} className="shrink-0" />
               {!collapsed && (
                 <>
-                  <span className="flex-1 truncate text-left">
-                    Fee Management
-                  </span>
+                  <span className="flex-1 truncate text-left">Fee Management</span>
                   {feesOpen ? <Minus size={15} /> : <Plus size={15} />}
                 </>
               )}
@@ -567,26 +499,10 @@ function AdminSidebar({ isOpen, onClose, collapsed }) {
             {!collapsed && feesOpen && (
               <div className="relative ml-2 mt-2 pb-2">
                 <span className="absolute left-9 top-0 h-full w-px bg-light-border dark:bg-dark-border" />
-                <StudentSubItem
-                  to={ROUTES.ADMIN_FEES}
-                  label="All Fees"
-                  collapsed={collapsed}
-                />
-                <StudentSubItem
-                  to={ROUTES.ADMIN_FEE_VOUCHERS}
-                  label="Vouchers"
-                  collapsed={collapsed}
-                />
-                <StudentSubItem
-                  to={ROUTES.ADMIN_FEE_DEFAULTERS}
-                  label="Defaulters"
-                  collapsed={collapsed}
-                />
-                <StudentSubItem
-                  to={ROUTES.ADMIN_FEE_GENERATE}
-                  label="Generate Fee"
-                  collapsed={collapsed}
-                />
+                <StudentSubItem to={ROUTES.ADMIN_FEES}             label="All Fees"      collapsed={collapsed} />
+                <StudentSubItem to={ROUTES.ADMIN_FEE_VOUCHERS}     label="Vouchers"      collapsed={collapsed} />
+                <StudentSubItem to={ROUTES.ADMIN_FEE_DEFAULTERS}   label="Defaulters"    collapsed={collapsed} />
+                <StudentSubItem to={ROUTES.ADMIN_FEE_GENERATE}     label="Generate Fee"  collapsed={collapsed} />
               </div>
             )}
           </div>
