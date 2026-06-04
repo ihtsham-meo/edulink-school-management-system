@@ -108,7 +108,10 @@ function AdminRoutes() {
       <Route path="students/add" element={<AddStudent />} />
       <Route path="students/bulk" element={<AddBulkStudents />} />
       <Route path="students/families" element={<ManageFamilies />} />
-      <Route path="students/active-inactive" element={<ActiveInactiveStudents />} />
+      <Route
+        path="students/active-inactive"
+        element={<ActiveInactiveStudents />}
+      />
       <Route path="students/print-list" element={<StudentList />} />
       <Route path="students/admission-letters" element={<AdmissionLetters />} />
       <Route path="students/id-cards" element={<StudentIdCards />} />
